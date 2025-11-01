@@ -10,13 +10,13 @@
   <meta name="author" content="LUMENA Creative" />
   <link rel="canonical" href="https://zlecajzlumena.pl/pages/oferty.html" />
 
-  <!-- Favicon -->
+  <!-- Favicon + theme -->
   <link rel="icon" href="/image/favicon.png" type="image/png">
+  <meta name="theme-color" content="#0b0b0f" />
 
   <!-- Fonts & CSS -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css" />
-  <script defer src="/js/main.js"></script>
 </head>
 
 <body>
@@ -26,9 +26,8 @@
       <a href="/" class="logo">
         <img src="/image/zlecaj-z-lumena.png" alt="ZLECAJ z LUMENA logo" height="48" />
       </a>
-      <nav class="nav">
-        <a href="/pages/panel-klient.html">Panel klienta</a>
-        <a href="/pages/login.html">Wyloguj się</a>
+      <nav class="nav" id="topNav">
+        <!-- wypełniane skryptem zależnie od zalogowania -->
       </nav>
     </div>
   </header>
@@ -39,66 +38,17 @@
       <h1>Otrzymane oferty</h1>
       <p class="subtitle">Zobacz propozycje złożone przez wykonawców do Twoich zleceń 💎</p>
 
-      <!-- SELEKTOR ZLECENIA -->
-      <div class="form-group" style="max-width: 400px; margin: 0 auto 40px;">
+      <!-- info dla niezalogowanych / bez zleceń -->
+      <div id="infoBox" class="center" style="margin:20px 0;"></div>
+
+      <!-- SELEKTOR ZLECENIA (tylko jeśli są zlecenia) -->
+      <div id="selectorWrap" class="form-group" style="max-width: 480px; margin: 0 auto 30px; display:none;">
         <label for="zlecenie-select" style="color: var(--gold); font-weight: 500;">Wybierz zlecenie</label>
-        <select id="zlecenie-select" name="zlecenie" style="width: 100%; padding: 12px 15px; border-radius: 10px; background-color: #111; color: var(--white); border: 1px solid rgba(255,255,255,0.1);">
-          <option>Remont łazienki 5m² — Warszawa</option>
-          <option>Malowanie mieszkania 40m² — Kraków</option>
-          <option>Projekt kuchni — Gdańsk</option>
-        </select>
+        <select id="zlecenie-select" name="zlecenie" style="width: 100%; padding: 12px 15px; border-radius: 10px; background-color: #111; color: var(--white); border: 1px solid rgba(255,255,255,0.1);"></select>
       </div>
 
       <!-- LISTA OFERT -->
-      <div class="offers">
-        <div class="offer-card">
-          <div class="offer-header">
-            <h3>Golden Build Sp. z o.o.</h3>
-            <p class="price">2 900 PLN</p>
-          </div>
-          <p class="meta">Termin realizacji: 7 dni roboczych</p>
-          <p class="desc">
-            Wykonamy kompleksowy remont łazienki: płytki, hydraulika, montaż armatury.  
-            W cenie materiały + sprzątanie po zakończeniu prac.
-          </p>
-          <div class="offer-actions">
-            <a href="/pages/profil-firmy.html" class="cta secondary">Zobacz profil firmy</a>
-            <a href="#" class="cta">Wybierz ofertę</a>
-          </div>
-        </div>
-
-        <div class="offer-card">
-          <div class="offer-header">
-            <h3>Remonty Expert</h3>
-            <p class="price">3 200 PLN</p>
-          </div>
-          <p class="meta">Termin realizacji: 10 dni roboczych</p>
-          <p class="desc">
-            Zajmujemy się kompleksowym remontem łazienek.  
-            Doświadczenie 10 lat, gwarancja 24 miesiące. Materiały po stronie klienta.
-          </p>
-          <div class="offer-actions">
-            <a href="/pages/profil-firmy.html" class="cta secondary">Zobacz profil firmy</a>
-            <a href="#" class="cta">Wybierz ofertę</a>
-          </div>
-        </div>
-
-        <div class="offer-card">
-          <div class="offer-header">
-            <h3>ProDecor</h3>
-            <p class="price">2 600 PLN</p>
-          </div>
-          <p class="meta">Termin realizacji: 5–6 dni roboczych</p>
-          <p class="desc">
-            Szybko i solidnie. Realizacje w Warszawie i okolicach.  
-            Wystawiamy fakturę VAT, pomagamy dobrać materiały.
-          </p>
-          <div class="offer-actions">
-            <a href="/pages/profil-firmy.html" class="cta secondary">Zobacz profil firmy</a>
-            <a href="#" class="cta">Wybierz ofertę</a>
-          </div>
-        </div>
-      </div>
+      <div id="offersWrap" class="offers"></div>
     </div>
   </section>
 
@@ -116,6 +66,8 @@
         <a href="/pages/o-lumena.html">O LUMENA</a>
         <a href="/pages/polityka.html">Polityka prywatności</a>
         <a href="/pages/rodo.html">RODO</a>
+        <a href="/pages/regulamin.html">Regulamin</a>
+        <a href="/pages/cookies.html">Polityka cookies</a>
         <a href="/pages/bezpieczenstwo.html">Poradnik bezpieczeństwa</a>
       </div>
       <div>
@@ -136,10 +88,9 @@
   <div id="cookie-banner" class="cookie-banner" style="display:none;">
     <div class="cookie-content">
       <p>
-        🍪 Ta strona korzysta z plików cookie, aby zapewnić Ci najlepsze doświadczenie,  
-        analizować ruch oraz wyświetlać dopasowane reklamy Google.  
-        Więcej informacji znajdziesz w naszej  
-        <a href="/pages/cookies.html" target="_blank">Polityce plików cookies</a>.
+        🍪 Ta strona korzysta z plików cookie, aby zapewnić Ci najlepsze doświadczenie,
+        analizować ruch oraz wyświetlać dopasowane reklamy Google.
+        Więcej informacji: <a href="/pages/cookies.html" target="_blank">Polityka plików cookies</a>.
       </p>
       <div class="cookie-actions">
         <button id="acceptCookies" class="cta">Akceptuję</button>
@@ -148,87 +99,164 @@
     </div>
   </div>
 
+  <!-- SKRYPT STRONY -->
   <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const banner = document.getElementById("cookie-banner");
-    const accepted = localStorage.getItem("lumena_cookies_accepted");
+    document.addEventListener("DOMContentLoaded", () => {
+      /* === NAV zależnie od zalogowania === */
+      const topNav = document.getElementById("topNav");
+      const token = localStorage.getItem("lumena_user_token");
+      const userType = localStorage.getItem("userType"); // (z login.html) "client" | "company"
 
-    if (!accepted) {
-      banner.style.display = "flex";
-    }
+      if (!token || userType !== "client") {
+        // Gość lub niewłaściwy typ — pokaż podstawową nawigację i komunikat
+        topNav.innerHTML = `
+          <a href="/">Strona główna</a>
+          <a href="/pages/rejestracja.html">Rejestracja</a>
+          <a href="/pages/login.html" class="cta">Zaloguj się</a>
+        `;
+      } else {
+        topNav.innerHTML = `
+          <a href="/pages/panel-klient.html">Panel klienta</a>
+          <button id="logoutBtn" class="cta secondary">Wyloguj się</button>
+        `;
+      }
 
-    document.getElementById("acceptCookies").addEventListener("click", () => {
-      localStorage.setItem("lumena_cookies_accepted", "true");
-      banner.style.display = "none";
+      /* === Dostęp do strony: tylko zalogowany klient === */
+      const infoBox = document.getElementById("infoBox");
+      const selectorWrap = document.getElementById("selectorWrap");
+      const offersWrap = document.getElementById("offersWrap");
+
+      if (!token || userType !== "client") {
+        infoBox.innerHTML = `
+          <p>Ta strona jest dostępna tylko dla zalogowanych klientów. 📩
+          <br><a class="cta" href="/pages/login.html" style="margin-top:10px; display:inline-block;">Zaloguj się</a></p>
+        `;
+        selectorWrap.style.display = "none";
+        return;
+      }
+
+      /* === Załaduj zlecenia użytkownika === */
+      const allOrders = JSON.parse(localStorage.getItem("lumena_orders") || "[]");
+      const myOrders = allOrders.filter(o => o.autorToken === token);
+
+      if (myOrders.length === 0) {
+        infoBox.innerHTML = `
+          <p>Nie masz jeszcze żadnych zleceń. Dodaj pierwsze 💎</p>
+          <p><a class="cta" href="/pages/dodaj-zlecenie.html" style="margin-top:10px; display:inline-block;">+ Dodaj zlecenie</a></p>
+        `;
+        selectorWrap.style.display = "none";
+        return;
+      }
+
+      infoBox.innerHTML = "";
+      selectorWrap.style.display = "block";
+
+      /* === Uzupełnij selektor zleceń === */
+      const select = document.getElementById("zlecenie-select");
+      select.innerHTML = myOrders
+        .sort((a,b) => new Date(b.data) - new Date(a.data))
+        .map(o => `<option value="${o.id}">${o.tytul} — ${o.miasto}</option>`)
+        .join("");
+
+      /* === Render ofert dla wybranego zlecenia === */
+      const OFFERS_KEY = "lumena_offers";                 // { [orderId]: Offer[] }
+      const CHOSEN_KEY = "lumena_chosen_offers";          // { [orderId]: Offer }
+
+      const renderOffers = (orderId) => {
+        const allOffers = JSON.parse(localStorage.getItem(OFFERS_KEY) || "{}");
+        const chosen = JSON.parse(localStorage.getItem(CHOSEN_KEY) || "{}");
+        const offers = (allOffers[orderId] || []).slice().sort((a,b) => new Date(b.date||0) - new Date(a.date||0));
+
+        offersWrap.innerHTML = "";
+
+        if (!offers.length) {
+          offersWrap.innerHTML = `<p>Brak ofert dla tego zlecenia.</p>`;
+          return;
+        }
+
+        offers.forEach((o, idx) => {
+          const isChosen = chosen[orderId] && chosen[orderId].firma === o.firma && chosen[orderId].kwota === o.kwota && chosen[orderId].opis === o.opis;
+          const card = document.createElement("div");
+          card.className = "offer-card";
+          card.innerHTML = `
+            <div class="offer-header">
+              <h3>${o.firma}</h3>
+              <p class="price">${Number(o.kwota).toLocaleString("pl-PL")} PLN</p>
+            </div>
+            <p class="meta">${o.date ? ("Złożono: " + new Date(o.date).toLocaleString("pl-PL")) : ""}</p>
+            <p class="desc">${o.opis}</p>
+            <div class="offer-actions">
+              <a href="/pages/profil-firmy.html" class="cta secondary">Zobacz profil firmy</a>
+              <button class="cta choose-offer" data-idx="${idx}">${isChosen ? "Wybrano ✅" : "Wybierz ofertę"}</button>
+            </div>
+          `;
+          offersWrap.appendChild(card);
+        });
+
+        // obsługa wyboru oferty
+        offersWrap.querySelectorAll(".choose-offer").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const idx = Number(btn.dataset.idx);
+            const chosenOffer = offers[idx];
+            const chosenMap = JSON.parse(localStorage.getItem(CHOSEN_KEY) || "{}");
+            chosenMap[orderId] = chosenOffer;
+            localStorage.setItem(CHOSEN_KEY, JSON.stringify(chosenMap));
+            renderOffers(orderId);
+            alert("Oferta została oznaczona jako wybrana ✅");
+          });
+        });
+      };
+
+      // render dla pierwszej opcji
+      renderOffers(select.value);
+
+      // render przy zmianie zlecenia
+      select.addEventListener("change", () => renderOffers(select.value));
+
+      // Wylogowanie (jeśli jest przycisk)
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+          if (confirm("Czy na pewno chcesz się wylogować?")) {
+            localStorage.removeItem("lumena_user_token");
+            localStorage.removeItem("userType");
+            window.location.href = "/pages/login.html";
+          }
+        });
+      }
     });
 
-    document.getElementById("declineCookies").addEventListener("click", () => {
-      localStorage.setItem("lumena_cookies_accepted", "false");
-      banner.style.display = "none";
+    /* === Baner cookies === */
+    document.addEventListener("DOMContentLoaded", () => {
+      const banner = document.getElementById("cookie-banner");
+      const accepted = localStorage.getItem("lumena_cookies_accepted");
+
+      if (!accepted) banner.style.display = "flex";
+
+      const acc = document.getElementById("acceptCookies");
+      const dec = document.getElementById("declineCookies");
+      if (acc) acc.addEventListener("click", () => { localStorage.setItem("lumena_cookies_accepted", "true"); banner.style.display = "none"; });
+      if (dec) dec.addEventListener("click", () => { localStorage.setItem("lumena_cookies_accepted", "false"); banner.style.display = "none"; });
     });
-  });
   </script>
 
+  <!-- STYLES: cookie banner -->
   <style>
-  .cookie-banner {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(15, 15, 15, 0.95);
-    border-top: 1px solid rgba(255,255,255,0.1);
-    color: #fff;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    font-family: 'Inter', sans-serif;
-    animation: fadeIn 0.6s ease-in-out;
-  }
-
-  .cookie-content {
-    max-width: 900px;
-    text-align: center;
-  }
-
-  .cookie-content p {
-    font-size: 14px;
-    line-height: 1.5;
-    margin-bottom: 10px;
-  }
-
-  .cookie-content a {
-    color: var(--gold);
-    text-decoration: underline;
-  }
-
-  .cookie-actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .cookie-actions .cta {
-    background: var(--gold);
-    color: #000;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-  }
-
-  .cookie-actions .cta.secondary {
-    background: transparent;
-    border: 1px solid var(--gold);
-    color: var(--gold);
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    .cookie-banner {
+      position: fixed; bottom: 0; left: 0; width: 100%;
+      background: rgba(15, 15, 15, 0.95);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      color: #fff; padding: 20px; display: none;
+      justify-content: center; align-items: center; z-index: 9999;
+      font-family: 'Inter', sans-serif; animation: fadeIn 0.6s ease-in-out;
+    }
+    .cookie-content { max-width: 900px; text-align: center; }
+    .cookie-content p { font-size: 14px; line-height: 1.5; margin-bottom: 10px; }
+    .cookie-content a { color: var(--gold); text-decoration: underline; }
+    .cookie-actions { display: flex; justify-content: center; gap: 10px; }
+    .cookie-actions .cta { background: var(--gold); color: #000; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    .cookie-actions .cta.secondary { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </body>
 </html>
