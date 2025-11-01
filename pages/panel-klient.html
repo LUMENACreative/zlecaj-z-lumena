@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panel Klienta — ZLECAJ z LUMENA</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Twój panel klienta — zarządzaj zleceniami, kontaktuj się z wykonawcami i dodawaj nowe projekty. ZLECAJ z LUMENA.">
+  <meta name="author" content="LUMENA Creative" />
+  <link rel="canonical" href="https://zlecajzlumena.pl/pages/panel-klient.html" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/assets/icons/favicon.png" type="image/png">
+  <meta name="theme-color" content="#0b0b0f" />
+
+  <!-- Fonts & CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body>
+  <!-- HEADER — PANEL KLIENTA -->
+  <header class="topbar panel-header">
+    <div class="wrap flex between center-v">
+      <div class="logo-area flex center-v">
+        <a href="/" class="logo">
+          <img src="/assets/images/logo-zlecajzlumena.png" alt="ZLECAJ z LUMENA logo" height="64" />
+        </a>
+        <span class="panel-title">Panel Klienta</span>
+      </div>
+
+      <nav class="panel-nav flex center-v">
+        <a href="/pages/dodaj-zlecenie.html" class="cta">Dodaj zlecenie</a>
+        <button id="logoutBtn" class="cta secondary">Wyloguj się</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- PANEL KLIENTA -->
+  <section class="panel">
+    <div class="wrap">
+      <h1>Witaj ponownie 💎</h1>
+      <p class="subtitle">Zarządzaj swoimi zleceniami i sprawdzaj oferty firm.</p>
+
+      <div class="panel-actions center">
+        <a href="/pages/dodaj-zlecenie.html" class="cta">+ Dodaj nowe zlecenie</a>
+      </div>
+
+      <h2 class="section-title">Twoje zlecenia</h2>
+      <div id="ordersList" class="orders"></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="lumena-footer">
+    <div class="wrap foot">
+      <div>
+        <h5>Sekcje</h5>
+        <a href="/pages/oferty.html">Zlecenia</a>
+        <a href="/pages/rejestracja.html">Rejestracja</a>
+        <a href="/pages/login.html">Logowanie</a>
+      </div>
+      <div>
+        <h5>Informacje</h5>
+        <a href="/pages/o-lumena.html">O LUMENA</a>
+        <a href="/pages/polityka.html">Polityka prywatności</a>
+        <a href="/pages/rodo.html">RODO</a>
+      </div>
+      <div>
+        <h5>Kontakt</h5>
+        <a href="mailto:kontakt.lumena.studio@gmail.com">kontakt.lumena.studio@gmail.com</a>
+        <a href="#">Instagram</a>
+        <a href="#">Pinterest</a>
+      </div>
+    </div>
+
+    <div class="copy">
+      © 2025 <span class="gold">LUMENA Creative</span> 💎  
+      <br><small>Wszystkie prawa zastrzeżone.</small>
+    </div>
+  </footer>
+
+  <!-- SKRYPT -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const ordersList = document.getElementById("ordersList");
+      const userToken = localStorage.getItem("lumena_user_token");
+      const allOrders = JSON.parse(localStorage.getItem("lumena_orders") || "[]");
+
+      // filtruj tylko zlecenia zalogowanego użytkownika
+      const userOrders = allOrders.filter(o => o.autorToken === userToken);
+
+      if (userOrders.length === 0) {
+        ordersList.innerHTML = "<p>Nie masz jeszcze żadnych zleceń. Dodaj pierwsze 💎</p>";
+        return;
+      }
+
+      userOrders.slice().reverse().forEach(o => {
+        const div = document.createElement("div");
+        div.classList.add("order-card");
+        div.innerHTML = `
+          <h3>${o.tytul}</h3>
+          <p class="meta">${o.miasto} • dodano: ${o.data}</p>
+          <p class="desc">${o.opis}</p>
+          <div class="order-actions">
+            <a href="/pages/szczegoly-zlecenia.html?id=${o.id}" class="cta secondary">Zobacz szczegóły</a>
+            <button class="cta delete-btn" data-id="${o.id}">Usuń</button>
+          </div>
+        `;
+        ordersList.appendChild(div);
+      });
+
+      // obsługa usuwania
+      ordersList.addEventListener("click", e => {
+        if (e.target.classList.contains("delete-btn")) {
+          const id = e.target.dataset.id;
+          if (confirm("Czy na pewno chcesz usunąć to zlecenie?")) {
+            const updated = allOrders.filter(o => o.id !== id);
+            localStorage.setItem("lumena_orders", JSON.stringify(updated));
+            alert("Zlecenie zostało usunięte 🗑️");
+            location.reload();
+          }
+        }
+      });
+
+      // wylogowanie
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        if (confirm("Czy na pewno chcesz się wylogować?")) {
+          localStorage.removeItem("lumena_user_token");
+          window.location.href = "/pages/login.html";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

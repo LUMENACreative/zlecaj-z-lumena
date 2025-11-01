@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dodaj zlecenie — ZLECAJ z LUMENA</title>
+
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap flex between center-v">
+      <a href="/" class="logo">
+        <img src="/assets/images/logo-zlecajzlumena.png" alt="ZLECAJ z LUMENA" height="48">
+      </a>
+      <nav class="nav">
+        <a href="/pages/panel-klient.html">Panel klienta</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="form-section">
+    <div class="wrap">
+      <h1>Dodaj zlecenie</h1>
+      <p class="subtitle">Opisz swoje zlecenie i poczekaj na oferty od firm 💎</p>
+
+      <form id="addOrderForm" class="zlecenie-form">
+        <div class="form-group">
+          <label for="tytul">Tytuł zlecenia *</label>
+          <input type="text" id="tytul" required placeholder="np. Malowanie mieszkania 50m² w Krakowie">
+        </div>
+
+        <div class="form-group">
+          <label for="opis">Opis zlecenia *</label>
+          <textarea id="opis" rows="4" required placeholder="Opisz dokładnie zakres prac, termin i szczegóły."></textarea>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="miasto">Miasto *</label>
+            <input type="text" id="miasto" required placeholder="np. Kraków">
+          </div>
+
+          <div class="form-group">
+            <label for="kategoria">Kategoria *</label>
+            <select id="kategoria" required>
+              <option value="">Wybierz kategorię</option>
+              <option value="Remonty">Remonty</option>
+              <option value="Malowanie">Malowanie</option>
+              <option value="Kuchnie">Kuchnie</option>
+              <option value="Łazienki">Łazienki</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-actions center">
+          <button type="submit" class="cta">Dodaj zlecenie</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <footer class="lumena-footer">
+    <div class="copy">© 2025 <span class="gold">LUMENA Creative</span> 💎</div>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("addOrderForm");
+
+      // jeśli nie ma tokenu, generujemy dla klienta
+      if (!localStorage.getItem("lumena_user_token")) {
+        localStorage.setItem("lumena_user_token", "USER_" + Math.random().toString(36).substring(2, 10));
+      }
+      const userToken = localStorage.getItem("lumena_user_token");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const tytul = form.tytul.value.trim();
+        const opis = form.opis.value.trim();
+        const miasto = form.miasto.value.trim();
+        const kategoria = form.kategoria.value;
+
+        if (!tytul || !opis || !miasto || !kategoria) {
+          alert("Uzupełnij wszystkie pola 💎");
+          return;
+        }
+
+        const id = "ZL_" + Date.now();
+        const newOrder = {
+          id,
+          tytul,
+          opis,
+          miasto,
+          kategoria,
+          data: new Date().toLocaleDateString("pl-PL"),
+          autorToken: userToken
+        };
+
+        const allOrders = JSON.parse(localStorage.getItem("lumena_orders") || "[]");
+        allOrders.push(newOrder);
+        localStorage.setItem("lumena_orders", JSON.stringify(allOrders));
+
+        alert("Zlecenie zostało dodane ✨");
+        window.location.href = `/pages/szczegoly-zlecenia.html?id=${id}`;
+      });
+    });
+  </script>
+</body>
+</html>

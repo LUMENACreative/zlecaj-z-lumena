@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Logowanie — ZLECAJ z LUMENA</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Zaloguj się do platformy ZLECAJ z LUMENA, aby dodawać lub realizować darmowe zlecenia. Klienci i wykonawcy — bez opłat.">
+  <meta name="author" content="LUMENA Creative" />
+  <link rel="canonical" href="https://zlecajzlumena.pl/pages/login.html" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/image/favicon.png" type="image/png">
+  <meta name="theme-color" content="#0b0b0f" />
+
+  <!-- Fonts & CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header class="topbar">
+    <div class="wrap flex between center-v">
+      <a href="/" class="logo">
+        <img src="/image/zlecaj-z-lumena.png" alt="ZLECAJ z LUMENA logo" height="72" />
+      </a>
+      <nav class="nav">
+        <a href="/">Strona główna</a>
+        <a href="/pages/rejestracja.html">Rejestracja</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- LOGIN FORM -->
+  <main class="form-section">
+    <div class="wrap">
+      <h1>Zaloguj się</h1>
+      <p class="subtitle">Uzyskaj dostęp do swojego panelu — klientów lub zleceń 💎</p>
+
+      <form id="loginForm" class="zlecenie-form">
+        <div class="form-group">
+          <label for="email">Adres e-mail *</label>
+          <input type="email" id="email" name="email" placeholder="np. kontakt@..." required>
+        </div>
+
+        <div class="form-group">
+          <label for="haslo">Hasło *</label>
+          <input type="password" id="haslo" name="haslo" placeholder="Wprowadź hasło" required>
+        </div>
+
+        <div class="form-group">
+          <label for="typ">Typ konta *</label>
+          <select id="typ" name="typ" required>
+            <option value="">Wybierz typ konta</option>
+            <option value="client">Klient</option>
+            <option value="company">Wykonawca</option>
+          </select>
+        </div>
+
+        <div class="form-actions center">
+          <button type="submit" class="cta">Zaloguj się</button>
+        </div>
+
+        <div class="form-links center">
+          <p><a href="/pages/rejestracja.html">Nie masz konta?</a></p>
+          <p><a href="#">Przypomnij hasło</a></p>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="lumena-footer" style="margin-top:100px;">
+    <div class="wrap foot">
+      <div>
+        <h5>Sekcje</h5>
+        <a href="/pages/oferty.html">Zlecenia</a>
+        <a href="/pages/rejestracja.html">Rejestracja</a>
+        <a href="/pages/login.html">Logowanie</a>
+      </div>
+      <div>
+        <h5>Informacje</h5>
+        <a href="/pages/o-lumena.html">O LUMENA</a>
+        <a href="/pages/polityka.html">Polityka prywatności</a>
+        <a href="/pages/rodo.html">RODO</a>
+      </div>
+      <div>
+        <h5>Kontakt</h5>
+        <a href="mailto:kontakt.lumena.studio@gmail.com">kontakt.lumena.studio@gmail.com</a>
+        <a href="#">Instagram</a>
+        <a href="#">Pinterest</a>
+      </div>
+    </div>
+
+    <div class="copy">
+      © 2025 <span class="gold">LUMENA Creative</span> 💎  
+      <br><small>Wszystkie prawa zastrzeżone.</small>
+    </div>
+  </footer>
+
+  <!-- SKRYPT LOGOWANIA -->
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const typ = document.getElementById("typ").value;
+      if (!typ) {
+        alert("Wybierz typ konta przed zalogowaniem.");
+        return;
+      }
+
+      localStorage.setItem("loggedIn", true);
+      localStorage.setItem("userType", typ);
+
+      if (typ === "client") {
+        alert("Zalogowano jako klient ✅");
+        window.location.href = "/pages/panel-klient.html";
+      } else {
+        alert("Zalogowano jako wykonawca ✅");
+        window.location.href = "/pages/panel-firma.html";
+      }
+    });
+  </script>
+
+  <script src="/js/access-control.js"></script>
+</body>
+</html>

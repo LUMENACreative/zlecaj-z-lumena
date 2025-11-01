@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Złóż ofertę — ZLECAJ z LUMENA</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Złóż swoją ofertę na wybrane zlecenie. Dodaj opis, cenę i termin realizacji — kontakt z klientem bez prowizji.">
+  <meta name="author" content="LUMENA Creative" />
+  <link rel="canonical" href="https://zlecajzlumena.pl/pages/zloz-oferte.html" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/assets/icons/favicon.png" type="image/png">
+
+  <!-- Fonts & CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" />
+  <script defer src="/js/forms.js"></script>
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header class="topbar">
+    <div class="wrap flex between center-v">
+      <a href="/" class="logo">
+        <img src="/assets/images/logo-zlecajzlumena.png" alt="ZLECAJ z LUMENA logo" height="48" />
+      </a>
+      <nav class="nav">
+        <a href="/pages/panel-firma.html">Panel firmy</a>
+        <a href="/pages/login.html">Wyloguj się</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- FORMULARZ ZŁÓŻ OFERTĘ -->
+  <section class="form-section">
+    <div class="wrap">
+      <h1>Złóż ofertę</h1>
+      <p class="subtitle">Wypełnij formularz i przedstaw swoją propozycję klientowi 💎</p>
+
+      <form name="zloz-oferte" method="POST" data-netlify="true" class="zlecenie-form" enctype="multipart/form-data">
+        <input type="hidden" name="form-name" value="zloz-oferte">
+
+        <!-- DANE ZLECENIA -->
+        <div class="form-group">
+          <label for="zlecenie">Tytuł zlecenia *</label>
+          <input type="text" id="zlecenie" name="zlecenie" placeholder="np. Malowanie mieszkania 60m²" required>
+        </div>
+
+        <!-- DANE FIRMY -->
+        <div class="form-group grid-2">
+          <div>
+            <label for="nazwa">Nazwa firmy *</label>
+            <input type="text" id="nazwa" name="nazwa" placeholder="np. Golden Build" required>
+          </div>
+          <div>
+            <label for="email">E-mail kontaktowy *</label>
+            <input type="email" id="email" name="email" placeholder="np. kontakt@firma.pl" required>
+          </div>
+        </div>
+
+        <div class="form-group grid-2">
+          <div>
+            <label for="telefon">Telefon *</label>
+            <input type="tel" id="telefon" name="telefon" placeholder="np. 600 123 456" required>
+          </div>
+          <div>
+            <label for="miasto">Miasto / Lokalizacja *</label>
+            <input type="text" id="miasto" name="miasto" placeholder="np. Kraków" required>
+          </div>
+        </div>
+
+        <!-- SZCZEGÓŁY OFERTY -->
+        <div class="form-group">
+          <label for="opis">Opis oferty *</label>
+          <textarea id="opis" name="opis" rows="6" placeholder="Opisz, co obejmuje Twoja oferta, termin, materiały, doświadczenie..." required></textarea>
+        </div>
+
+        <div class="form-group grid-2">
+          <div>
+            <label for="cena">Proponowana cena (PLN) *</label>
+            <input type="number" id="cena" name="cena" placeholder="np. 2500" min="0" required>
+          </div>
+          <div>
+            <label for="termin">Szacowany czas realizacji *</label>
+            <input type="text" id="termin" name="termin" placeholder="np. 5–7 dni roboczych" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="zalacznik">Załącz zdjęcie / plik (opcjonalnie)</label>
+          <input type="file" id="zalacznik" name="zalacznik" accept=".jpg,.jpeg,.png,.pdf">
+        </div>
+
+        <!-- ZGODA -->
+        <div class="form-group checkbox">
+          <label>
+            <input type="checkbox" required>
+            Akceptuję <a href="/pages/polityka.html" target="_blank">politykę prywatności</a>.
+          </label>
+        </div>
+
+        <!-- SUBMIT -->
+        <div class="form-actions center">
+          <button type="submit" class="cta">Wyślij ofertę</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="lumena-footer">
+    <div class="wrap foot">
+      <div>
+        <h5>Sekcje</h5>
+        <a href="/pages/oferty.html">Zlecenia</a>
+        <a href="/pages/rejestracja.html">Rejestracja</a>
+        <a href="/pages/login.html">Logowanie</a>
+      </div>
+      <div>
+        <h5>Informacje</h5>
+        <a href="/pages/o-lumena.html">O LUMENA</a>
+        <a href="/pages/polityka.html">Polityka prywatności</a>
+        <a href="/pages/rodo.html">RODO</a>
+      </div>
+      <div>
+        <h5>Kontakt</h5>
+        <a href="mailto:kontakt.lumena.studio@gmail.com">kontakt.lumena.studio@gmail.com</a>
+        <a href="#">Instagram</a>
+        <a href="#">Pinterest</a>
+      </div>
+    </div>
+
+    <div class="copy">
+      © 2025 <span class="gold">LUMENA Creative</span> 💎  
+      <br><small>Wszystkie prawa zastrzeżone.</small>
+    </div>
+  </footer>
+</body>
+</html>

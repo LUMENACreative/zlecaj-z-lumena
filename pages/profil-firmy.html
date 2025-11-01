@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profil firmy — ZLECAJ z LUMENA</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Profil wykonawcy — zobacz ofertę, opis działalności i realizacje. Wybierz najlepszego fachowca na ZLECAJ z LUMENA.">
+  <meta name="author" content="LUMENA Creative" />
+  <link rel="canonical" href="https://zlecajzlumena.pl/pages/profil-firmy.html" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/assets/icons/favicon.png" type="image/png">
+  <meta name="theme-color" content="#0b0b0f" />
+
+  <!-- Fonts & CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header class="topbar panel-header">
+    <div class="wrap flex between center-v">
+      <div class="logo-area flex center-v">
+        <a href="/" class="logo">
+          <img src="/assets/images/logo-zlecajzlumena.png" alt="ZLECAJ z LUMENA logo" height="64" />
+        </a>
+        <span class="panel-title">Profil firmy</span>
+      </div>
+
+      <nav class="panel-nav flex center-v">
+        <a href="/pages/panel-firma.html" class="cta">Panel Wykonawcy</a>
+        <button id="logoutBtn" class="cta secondary">Wyloguj się</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- PROFIL FIRMY -->
+  <section class="firm-profile">
+    <div class="wrap">
+      <div class="profile-header">
+        <div class="avatar">🏗️</div>
+        <div class="info">
+          <h1 id="firmName">Golden Build Sp. z o.o.</h1>
+          <p id="firmBranch" class="branch">Remonty i wykończenia wnętrz</p>
+          <p id="firmLocation" class="location">Warszawa, mazowieckie</p>
+          <a href="#" id="contactBtn" class="cta small">Wyślij wiadomość</a>
+        </div>
+      </div>
+
+      <div class="profile-about">
+        <h2>O firmie</h2>
+        <p id="firmAbout">
+          Specjalizujemy się w kompleksowych remontach mieszkań i domów.  
+          Oferujemy malowanie, układanie płytek, montaż mebli, prace hydrauliczne i elektryczne.  
+          Zrealizowaliśmy ponad 200 projektów w Warszawie i okolicach.  
+          Gwarantujemy terminowość, estetykę wykonania i 24 miesiące gwarancji.
+        </p>
+      </div>
+
+      <div class="profile-skills">
+        <h2>Specjalizacje</h2>
+        <ul id="firmSkills" class="skills-list">
+          <li>🎨 Malowanie i tapetowanie</li>
+          <li>🧱 Układanie płytek</li>
+          <li>🔌 Instalacje elektryczne</li>
+          <li>🚿 Remonty łazienek</li>
+          <li>🪚 Montaż zabudowy meblowej</li>
+        </ul>
+      </div>
+
+      <div class="profile-actions center">
+        <button id="editProfileBtn" class="cta">Edytuj profil</button>
+        <p id="profileLink" class="gold small" style="margin-top:10px;"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODAL EDKYCJI -->
+  <div id="editModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h2>Edytuj profil firmy</h2>
+      <form id="editForm">
+        <label>Nazwa firmy</label>
+        <input type="text" id="editName">
+
+        <label>Branża</label>
+        <input type="text" id="editBranch">
+
+        <label>Lokalizacja</label>
+        <input type="text" id="editLocation">
+
+        <label>Opis firmy</label>
+        <textarea id="editAbout" rows="4"></textarea>
+
+        <label>Specjalizacje (oddziel przecinkami)</label>
+        <input type="text" id="editSkills">
+
+        <label>E-mail kontaktowy</label>
+        <input type="email" id="editEmail">
+
+        <div class="modal-actions">
+          <button type="submit" class="cta">Zapisz zmiany</button>
+          <button type="button" id="cancelEdit" class="cta secondary">Anuluj</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="lumena-footer">
+    <div class="wrap foot">
+      <div>
+        <h5>Sekcje</h5>
+        <a href="/pages/oferty.html">Oferty</a>
+        <a href="/pages/rejestracja.html">Rejestracja</a>
+        <a href="/pages/login.html">Logowanie</a>
+      </div>
+      <div>
+        <h5>Informacje</h5>
+        <a href="/pages/o-lumena.html">O LUMENA</a>
+        <a href="/pages/polityka.html">Polityka prywatności</a>
+        <a href="/pages/rodo.html">RODO</a>
+      </div>
+      <div>
+        <h5>Kontakt</h5>
+        <a href="mailto:kontakt.lumena.studio@gmail.com">kontakt.lumena.studio@gmail.com</a>
+        <a href="#">Instagram</a>
+        <a href="#">Pinterest</a>
+      </div>
+    </div>
+
+    <div class="copy">
+      © 2025 <span class="gold">LUMENA Creative</span> 💎  
+      <br><small>Wszystkie prawa zastrzeżone.</small>
+    </div>
+  </footer>
+
+  <!-- SKRYPTY -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const FIRMS_KEY = "lumena_firms";
+      const PROFILE_KEY = "lumena_firm_profile";
+
+      const params = new URLSearchParams(window.location.search);
+      const firmId = params.get("id");
+
+      const firms = JSON.parse(localStorage.getItem(FIRMS_KEY) || "{}");
+      const firmData = JSON.parse(localStorage.getItem(PROFILE_KEY) || "{}");
+
+      const editBtn = document.getElementById("editProfileBtn");
+      const modal = document.getElementById("editModal");
+      const cancelBtn = document.getElementById("cancelEdit");
+      const contactBtn = document.getElementById("contactBtn");
+
+      /* Tryb publiczny */
+      if (firmId) {
+        const firm = firms[firmId];
+        if (!firm) {
+          document.getElementById("firmName").textContent = "Firma nieznana";
+          document.getElementById("firmAbout").textContent = "Profil został usunięty lub jest niedostępny.";
+          editBtn.style.display = "none";
+          return;
+        }
+        document.getElementById("firmName").textContent = firm.name;
+        document.getElementById("firmBranch").textContent = firm.branch;
+        document.getElementById("firmLocation").textContent = firm.location;
+        document.getElementById("firmAbout").textContent = firm.about;
+        const skillsList = document.getElementById("firmSkills");
+        skillsList.innerHTML = "";
+        firm.skills.forEach(s => {
+          const li = document.createElement("li");
+          li.textContent = s;
+          skillsList.appendChild(li);
+        });
+        if (firm.email) contactBtn.href = `mailto:${firm.email}`;
+        editBtn.style.display = "none";
+        return;
+      }
+
+      /* Tryb edycji własnego profilu */
+      if (firmData.name) {
+        document.getElementById("firmName").textContent = firmData.name;
+        document.getElementById("firmBranch").textContent = firmData.branch;
+        document.getElementById("firmLocation").textContent = firmData.location;
+        document.getElementById("firmAbout").textContent = firmData.about;
+        const skillsList = document.getElementById("firmSkills");
+        skillsList.innerHTML = "";
+        firmData.skills.forEach(skill => {
+          const li = document.createElement("li");
+          li.textContent = skill;
+          skillsList.appendChild(li);
+        });
+        if (firmData.email) contactBtn.href = `mailto:${firmData.email}`;
+
+        // pokaż link do profilu publicznego
+        const firmIdGen = firmData.name.toLowerCase().replace(/\s+/g, "-");
+        document.getElementById("profileLink").innerHTML = 
+          `Twój publiczny profil: <a href="/pages/profil-firmy.html?id=${firmIdGen}" class="gold">${window.location.origin}/pages/profil-firmy.html?id=${firmIdGen}</a>`;
+      }
+
+      // otwieranie modala
+      editBtn.addEventListener("click", () => {
+        modal.style.display = "flex";
+        document.getElementById("editName").value = firmData.name || "";
+        document.getElementById("editBranch").value = firmData.branch || "";
+        document.getElementById("editLocation").value = firmData.location || "";
+        document.getElementById("editAbout").value = firmData.about || "";
+        document.getElementById("editSkills").value = (firmData.skills || []).join(", ");
+        document.getElementById("editEmail").value = firmData.email || "";
+      });
+
+      cancelBtn.addEventListener("click", () => modal.style.display = "none");
+
+      // zapis zmian
+      document.getElementById("editForm").addEventListener("submit", e => {
+        e.preventDefault();
+        const updated = {
+          name: document.getElementById("editName").value.trim(),
+          branch: document.getElementById("editBranch").value.trim(),
+          location: document.getElementById("editLocation").value.trim(),
+          about: document.getElementById("editAbout").value.trim(),
+          email: document.getElementById("editEmail").value.trim(),
+          skills: document.getElementById("editSkills").value.split(",").map(s => s.trim()).filter(Boolean)
+        };
+        localStorage.setItem(PROFILE_KEY, JSON.stringify(updated));
+        const id = updated.name.toLowerCase().replace(/\s+/g, "-");
+        const firms = JSON.parse(localStorage.getItem(FIRMS_KEY) || "{}");
+        firms[id] = updated;
+        localStorage.setItem(FIRMS_KEY, JSON.stringify(firms));
+        alert("Zapisano zmiany ✅");
+        location.reload();
+      });
+
+      // wylogowanie
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        if (confirm("Czy na pewno chcesz się wylogować?")) {
+          localStorage.removeItem("lumena_user_token");
+          window.location.href = "/pages/login.html";
+        }
+      });
+    });
+  </script>
+
+  <style>
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .modal-content {
+      background: #1a1a1a;
+      border-radius: 14px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      color: white;
+    }
+    .modal-content label {
+      display: block;
+      margin-top: 12px;
+      color: var(--gold);
+    }
+    .modal-content input,
+    .modal-content textarea {
+      width: 100%;
+      background: #111;
+      color: white;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 6px;
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .gold.small a {
+      color: var(--gold);
+      text-decoration: underline;
+    }
+  </style>
+</body>
+</html>

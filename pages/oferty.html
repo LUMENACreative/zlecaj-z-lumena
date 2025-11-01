@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Otrzymane oferty — ZLECAJ z LUMENA</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Przeglądaj oferty złożone przez wykonawców do Twoich zleceń. Porównaj ceny, terminy i wybierz najlepszego fachowca.">
+  <meta name="author" content="LUMENA Creative" />
+  <link rel="canonical" href="https://zlecajzlumena.pl/pages/oferty.html" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/assets/icons/favicon.png" type="image/png">
+
+  <!-- Fonts & CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" />
+  <script defer src="/js/main.js"></script>
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header class="topbar">
+    <div class="wrap flex between center-v">
+      <a href="/" class="logo">
+        <img src="/assets/images/logo-zlecajzlumena.png" alt="ZLECAJ z LUMENA logo" height="48" />
+      </a>
+      <nav class="nav">
+        <a href="/pages/panel-klient.html">Panel klienta</a>
+        <a href="/pages/login.html">Wyloguj się</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- OFERTY -->
+  <section class="panel">
+    <div class="wrap">
+      <h1>Otrzymane oferty</h1>
+      <p class="subtitle">Zobacz propozycje złożone przez wykonawców do Twoich zleceń 💎</p>
+
+      <!-- SELEKTOR ZLECENIA -->
+      <div class="form-group" style="max-width: 400px; margin: 0 auto 40px;">
+        <label for="zlecenie-select" style="color: var(--gold); font-weight: 500;">Wybierz zlecenie</label>
+        <select id="zlecenie-select" name="zlecenie" style="width: 100%; padding: 12px 15px; border-radius: 10px; background-color: #111; color: var(--white); border: 1px solid rgba(255,255,255,0.1);">
+          <option>Remont łazienki 5m² — Warszawa</option>
+          <option>Malowanie mieszkania 40m² — Kraków</option>
+          <option>Projekt kuchni — Gdańsk</option>
+        </select>
+      </div>
+
+      <!-- LISTA OFERT -->
+      <div class="offers">
+        <div class="offer-card">
+          <div class="offer-header">
+            <h3>Golden Build Sp. z o.o.</h3>
+            <p class="price">2 900 PLN</p>
+          </div>
+          <p class="meta">Termin realizacji: 7 dni roboczych</p>
+          <p class="desc">
+            Wykonamy kompleksowy remont łazienki: płytki, hydraulika, montaż armatury.  
+            W cenie materiały + sprzątanie po zakończeniu prac.
+          </p>
+          <div class="offer-actions">
+            <a href="/pages/profil-firmy.html" class="cta secondary">Zobacz profil firmy</a>
+            <a href="#" class="cta">Wybierz ofertę</a>
+          </div>
+        </div>
+
+        <div class="offer-card">
+          <div class="offer-header">
+            <h3>Remonty Expert</h3>
+            <p class="price">3 200 PLN</p>
+          </div>
+          <p class="meta">Termin realizacji: 10 dni roboczych</p>
+          <p class="desc">
+            Zajmujemy się kompleksowym remontem łazienek.  
+            Doświadczenie 10 lat, gwarancja 24 miesiące. Materiały po stronie klienta.
+          </p>
+          <div class="offer-actions">
+            <a href="/pages/profil-firmy.html" class="cta secondary">Zobacz profil firmy</a>
+            <a href="#" class="cta">Wybierz ofertę</a>
+          </div>
+        </div>
+
+        <div class="offer-card">
+          <div class="offer-header">
+            <h3>ProDecor</h3>
+            <p class="price">2 600 PLN</p>
+          </div>
+          <p class="meta">Termin realizacji: 5–6 dni roboczych</p>
+          <p class="desc">
+            Szybko i solidnie. Realizacje w Warszawie i okolicach.  
+            Wystawiamy fakturę VAT, pomagamy dobrać materiały.
+          </p>
+          <div class="offer-actions">
+            <a href="/pages/profil-firmy.html" class="cta secondary">Zobacz profil firmy</a>
+            <a href="#" class="cta">Wybierz ofertę</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="lumena-footer">
+    <div class="wrap foot">
+      <div>
+        <h5>Sekcje</h5>
+        <a href="/pages/oferty.html">Zlecenia</a>
+        <a href="/pages/rejestracja.html">Rejestracja</a>
+        <a href="/pages/login.html">Logowanie</a>
+      </div>
+      <div>
+        <h5>Informacje</h5>
+        <a href="/pages/o-lumena.html">O LUMENA</a>
+        <a href="/pages/polityka.html">Polityka prywatności</a>
+        <a href="/pages/rodo.html">RODO</a>
+      </div>
+      <div>
+        <h5>Kontakt</h5>
+        <a href="mailto:kontakt.lumena.studio@gmail.com">kontakt.lumena.studio@gmail.com</a>
+        <a href="#">Instagram</a>
+        <a href="#">Pinterest</a>
+      </div>
+    </div>
+
+    <div class="copy">
+      © 2025 <span class="gold">LUMENA Creative</span> 💎  
+      <br><small>Wszystkie prawa zastrzeżone.</small>
+    </div>
+  </footer>
+</body>
+</html>

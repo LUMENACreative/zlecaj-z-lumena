@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Szczegóły zlecenia — ZLECAJ z LUMENA</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="wrap flex between center-v">
+      <a href="/" class="logo"><img src="/assets/images/logo-zlecajzlumena.png" alt="ZLECAJ z LUMENA" height="48"></a>
+      <nav class="nav">
+        <a href="/pages/panel-firma.html">Panel firmy</a>
+        <a href="/pages/login.html">Wyloguj się</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="zlecenie-details">
+    <div class="wrap">
+      <h1 id="zlec-title">Zlecenie</h1>
+      <p class="subtitle" id="zlec-subtitle"></p>
+
+      <div class="details-card">
+        <h2>Opis zlecenia</h2>
+        <p id="zlec-opis"></p>
+
+        <button id="deleteOrderBtn" class="cta secondary" style="display:none;">Usuń zlecenie</button>
+      </div>
+
+      <div id="zloz-oferte" class="offer-form-wrap">
+        <h2 class="section-title">Złóż swoją ofertę</h2>
+        <form id="offerForm" class="offer-form zlecenie-form">
+          <div class="form-group grid-2">
+            <div><label for="firma">Nazwa firmy *</label><input type="text" id="firma" required></div>
+            <div><label for="kwota">Kwota (PLN) *</label><input type="number" id="kwota" required></div>
+          </div>
+          <div class="form-group"><label for="opis">Opis *</label><textarea id="opis" rows="4" required></textarea></div>
+          <div class="form-actions center"><button type="submit" class="cta">Wyślij ofertę</button></div>
+        </form>
+      </div>
+
+      <div class="offers-list">
+        <h2 class="section-title">Złożone oferty</h2>
+        <div id="offersContainer" class="offers"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="lumena-footer"><div class="copy">© 2025 <span class="gold">LUMENA Creative</span> 💎</div></footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id");
+      const userToken = localStorage.getItem("lumena_user_token");
+      const allOrders = JSON.parse(localStorage.getItem("lumena_orders") || "[]");
+      const order = allOrders.find(o => o.id === id);
+
+      if (!order) {
+        document.body.innerHTML = "<h2 style='text-align:center;margin-top:50px;'>Nie znaleziono zlecenia.</h2>";
+        return;
+      }
+
+      document.getElementById("zlec-title").textContent = order.tytul;
+      document.getElementById("zlec-subtitle").textContent = `${order.miasto} • ${order.data} • ${order.kategoria}`;
+      document.getElementById("zlec-opis").textContent = order.opis;
+
+      // pokaż przycisk usuwania tylko właścicielowi
+      if (order.autorToken === userToken) {
+        const btn = document.getElementById("deleteOrderBtn");
+        btn.style.display = "inline-block";
+        btn.addEventListener("click", () => {
+          if (confirm("Czy na pewno chcesz usunąć to zlecenie?")) {
+            const updated = allOrders.filter(o => o.id !== id);
+            localStorage.setItem("lumena_orders", JSON.stringify(updated));
+            alert("Zlecenie zostało usunięte 🗑️");
+            window.location.href = "/pages/panel-klient.html";
+          }
+        });
+      }
+
+      // oferty
+      const offersContainer = document.getElementById("offersContainer");
+      const offerForm = document.getElementById("offerForm");
+      const allOffers = JSON.parse(localStorage.getItem("lumena_offers") || "{}");
+
+      const renderOffers = () => {
+        const offers = allOffers[id] || [];
+        offersContainer.innerHTML = "";
+        if (!offers.length) {
+          offersContainer.innerHTML = "<p>Brak ofert dla tego zlecenia.</p>";
+          return;
+        }
+        offers.slice().reverse().forEach(o => {
+          const div = document.createElement("div");
+          div.classList.add("offer-card");
+          div.innerHTML = `
+            <h3>${o.firma}</h3>
+            <p><strong>Kwota:</strong> ${o.kwota} PLN</p>
+            <p>${o.opis}</p>
+            <a href="/pages/profil-firmy.html" class="cta small">Zobacz profil firmy</a>
+          `;
+          offersContainer.appendChild(div);
+        });
+      };
+      renderOffers();
+
+      offerForm.addEventListener("submit", e => {
+        e.preventDefault();
+        const firma = offerForm.firma.value.trim();
+        const kwota = offerForm.kwota.value.trim();
+        const opis = offerForm.opis.value.trim();
+        if (!firma || !kwota || !opis) return alert("Uzupełnij wszystkie pola 💎");
+        allOffers[id] = allOffers[id] || [];
+        allOffers[id].push({ firma, kwota, opis, date: new Date().toISOString() });
+        localStorage.setItem("lumena_offers", JSON.stringify(allOffers));
+        offerForm.reset();
+        renderOffers();
+        alert("Oferta została zapisana ✨");
+      });
+    });
+  </script>
+</body>
+</html>

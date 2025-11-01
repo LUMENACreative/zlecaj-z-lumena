@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profil wykonawcy — ZLECAJ z LUMENA</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Zobacz profil wykonawcy — opis działalności, specjalizacje i realizacje. Wybierz najlepszego fachowca na ZLECAJ z LUMENA.">
+  <meta name="author" content="LUMENA Creative" />
+  <link rel="canonical" href="https://zlecajzlumena.pl/pages/profil-firmy-public.html" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/assets/icons/favicon.png" type="image/png">
+  <meta name="theme-color" content="#0b0b0f" />
+
+  <!-- Fonts & CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header class="topbar">
+    <div class="wrap flex between center-v">
+      <a href="/" class="logo">
+        <img src="/assets/images/logo-zlecajzlumena.png" alt="ZLECAJ z LUMENA logo" height="48" />
+      </a>
+      <nav class="nav">
+        <a href="/pages/oferty.html">Zlecenia</a>
+        <a href="/pages/login.html" class="cta small">Zaloguj się</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- PROFIL FIRMY (WIDOK PUBLICZNY) -->
+  <section class="firm-profile">
+    <div class="wrap">
+      <div class="profile-header">
+        <div class="avatar">🏗️</div>
+        <div class="info">
+          <h1 id="firmName">Golden Build Sp. z o.o.</h1>
+          <p id="firmBranch" class="branch">Remonty i wykończenia wnętrz</p>
+          <p id="firmLocation" class="location">Warszawa, mazowieckie</p>
+        </div>
+      </div>
+
+      <div class="profile-about">
+        <h2>O firmie</h2>
+        <p id="firmAbout">
+          Specjalizujemy się w kompleksowych remontach mieszkań i domów.  
+          Oferujemy malowanie, układanie płytek, montaż mebli, prace hydrauliczne i elektryczne.  
+          Zrealizowaliśmy ponad 200 projektów w Warszawie i okolicach.  
+          Gwarantujemy terminowość, estetykę wykonania i 24 miesiące gwarancji.
+        </p>
+      </div>
+
+      <div class="profile-skills">
+        <h2>Specjalizacje</h2>
+        <ul id="firmSkills" class="skills-list">
+          <li>🎨 Malowanie i tapetowanie</li>
+          <li>🧱 Układanie płytek</li>
+          <li>🔌 Instalacje elektryczne</li>
+          <li>🚿 Remonty łazienek</li>
+          <li>🪚 Montaż zabudowy meblowej</li>
+        </ul>
+      </div>
+
+      <div class="profile-gallery">
+        <h2>Realizacje</h2>
+        <div class="gallery-grid">
+          <img src="/image/realizacja1.jpg" alt="Remont łazienki" />
+          <img src="/image/realizacja2.jpg" alt="Salon po remoncie" />
+          <img src="/image/realizacja3.jpg" alt="Nowoczesna kuchnia" />
+          <img src="/image/realizacja4.jpg" alt="Sypialnia z tapetą" />
+        </div>
+      </div>
+
+      <div class="cta-container center">
+        <a href="mailto:kontakt.lumena.studio@gmail.com" class="cta">Skontaktuj się z firmą</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="lumena-footer">
+    <div class="wrap foot">
+      <div>
+        <h5>Sekcje</h5>
+        <a href="/pages/oferty.html">Zlecenia</a>
+        <a href="/pages/rejestracja.html">Rejestracja</a>
+        <a href="/pages/login.html">Logowanie</a>
+      </div>
+      <div>
+        <h5>Informacje</h5>
+        <a href="/pages/o-lumena.html">O LUMENA</a>
+        <a href="/pages/polityka.html">Polityka prywatności</a>
+        <a href="/pages/rodo.html">RODO</a>
+      </div>
+      <div>
+        <h5>Kontakt</h5>
+        <a href="mailto:kontakt.lumena.studio@gmail.com">kontakt.lumena.studio@gmail.com</a>
+        <a href="#">Instagram</a>
+        <a href="#">Pinterest</a>
+      </div>
+    </div>
+
+    <div class="copy">
+      © 2025 <span class="gold">LUMENA Creative</span> 💎  
+      <br><small>Wszystkie prawa zastrzeżone.</small>
+    </div>
+  </footer>
+
+  <!-- SKRYPT -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const firmData = JSON.parse(localStorage.getItem("lumena_firm_profile") || "{}");
+
+      // Jeśli firma wcześniej zapisała profil — pokaż go
+      if (firmData.name) {
+        document.getElementById("firmName").textContent = firmData.name;
+        document.getElementById("firmBranch").textContent = firmData.branch;
+        document.getElementById("firmLocation").textContent = firmData.location;
+        document.getElementById("firmAbout").textContent = firmData.about;
+
+        const skillsList = document.getElementById("firmSkills");
+        skillsList.innerHTML = "";
+        firmData.skills.forEach(skill => {
+          const li = document.createElement("li");
+          li.textContent = skill;
+          skillsList.appendChild(li);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
