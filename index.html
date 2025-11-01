@@ -45,13 +45,10 @@
     </div>
   </header>
 
-  <!-- 🟨 BANER REKLAMOWY (np. Google AdSense lub partner) -->
+  <!-- 🟨 BANER REKLAMOWY -->
   <section class="ad-banner top-ad">
     <div class="wrap center">
-      <!-- Przykładowe miejsce na reklamę -->
-      <div class="ad-placeholder">
-        Miejsce na reklamę 728x90 lub partnera 💎
-      </div>
+      <div class="ad-placeholder">Miejsce na reklamę 728x90 lub partnera 💎</div>
     </div>
   </section>
 
@@ -72,21 +69,9 @@
     <div class="wrap">
       <h2>Jak to działa?</h2>
       <div class="grid-3">
-        <div class="step">
-          <span class="icon">✏️</span>
-          <h3>Dodaj zlecenie</h3>
-          <p>Wypełnij prosty formularz, opisz czego potrzebujesz i dodaj lokalizację.</p>
-        </div>
-        <div class="step">
-          <span class="icon">🧰</span>
-          <h3>Odbierz oferty</h3>
-          <p>Firmy skontaktują się z Tobą bezpośrednio — bez prowizji i bez pośredników.</p>
-        </div>
-        <div class="step">
-          <span class="icon">🤝</span>
-          <h3>Wybierz wykonawcę</h3>
-          <p>Porównaj oferty, sprawdź profile i wybierz najlepszą firmę.</p>
-        </div>
+        <div class="step"><span class="icon">✏️</span><h3>Dodaj zlecenie</h3><p>Wypełnij prosty formularz, opisz czego potrzebujesz i dodaj lokalizację.</p></div>
+        <div class="step"><span class="icon">🧰</span><h3>Odbierz oferty</h3><p>Firmy skontaktują się z Tobą bezpośrednio — bez prowizji i pośredników.</p></div>
+        <div class="step"><span class="icon">🤝</span><h3>Wybierz wykonawcę</h3><p>Porównaj oferty, sprawdź profile i wybierz najlepszą firmę.</p></div>
       </div>
     </div>
   </section>
@@ -106,7 +91,7 @@
     </div>
   </section>
 
-  <!-- 🟦 SEKCJA PARTNERSKA / PROMOCYJNA -->
+  <!-- 🟦 SEKCJA PARTNERSKA -->
   <section class="promo-banner">
     <div class="wrap center">
       <h2>💎 Partnerzy LUMENA</h2>
@@ -124,11 +109,11 @@
     </div>
   </section>
 
-  <!-- TRUST / SAFETY -->
+  <!-- TRUST -->
   <section class="trust">
     <div class="wrap">
       <h2>Bezpieczne zlecenia, bez ukrytych kosztów</h2>
-      <p>Chronimy Twoje dane (RODO), a wszystkie kontakty są darmowe. Zobacz nasz <a href="/pages/bezpieczenstwo.html">poradnik bezpieczeństwa</a>.</p>
+      <p>Chronimy Twoje dane (RODO). Zobacz nasz <a href="/pages/bezpieczenstwo.html">poradnik bezpieczeństwa</a>.</p>
     </div>
   </section>
 
@@ -164,15 +149,13 @@
   <!-- ACCESS CONTROL -->
   <script src="/js/access-control.js"></script>
 
-  <!-- COOKIE BANNER (pozostaje bez zmian) -->
+  <!-- COOKIE BANNER -->
   <div id="cookie-banner" class="cookie-banner" style="display:none;">
     <div class="cookie-content">
-      <p>
-        🍪 Ta strona korzysta z plików cookie, aby zapewnić Ci najlepsze doświadczenie,  
-        analizować ruch oraz wyświetlać dopasowane reklamy Google.  
-        Więcej informacji znajdziesz w naszej  
-        <a href="/pages/cookies.html" target="_blank">Polityce plików cookies</a>.
-      </p>
+      <p>🍪 Ta strona korzysta z plików cookie, aby zapewnić Ci najlepsze doświadczenie,  
+      analizować ruch oraz wyświetlać dopasowane reklamy Google.  
+      Więcej informacji znajdziesz w naszej  
+      <a href="/pages/cookies.html" target="_blank">Polityce plików cookies</a>.</p>
       <div class="cookie-actions">
         <button id="acceptCookies" class="cta">Akceptuję</button>
         <button id="declineCookies" class="cta secondary">Odrzuć</button>
@@ -180,21 +163,20 @@
     </div>
   </div>
 
-  <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const banner = document.getElementById("cookie-banner");
-    const accepted = localStorage.getItem("lumena_cookies_accepted");
+  <!-- 🔥 FIREBASE TEST -->
+  <script type="module">
+    import { db } from "/js/firebase.js";
+    import { collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-    if (!accepted) banner.style.display = "flex";
-    document.getElementById("acceptCookies").addEventListener("click", () => {
-      localStorage.setItem("lumena_cookies_accepted", "true");
-      banner.style.display = "none";
-    });
-    document.getElementById("declineCookies").addEventListener("click", () => {
-      localStorage.setItem("lumena_cookies_accepted", "false");
-      banner.style.display = "none";
-    });
-  });
+    async function testFirebase() {
+      try {
+        const snapshot = await getDocs(collection(db, "test"));
+        console.log("🔥 Połączenie z Firebase działa! Liczba dokumentów:", snapshot.size);
+      } catch (err) {
+        console.error("❌ Błąd połączenia z Firebase:", err);
+      }
+    }
+    testFirebase();
   </script>
 
   <style>
