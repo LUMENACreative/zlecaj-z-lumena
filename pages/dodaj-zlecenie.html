@@ -5,13 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dodaj zlecenie — ZLECAJ z LUMENA</title>
 
+  <!-- SEO -->
+  <meta name="description" content="Dodaj darmowe zlecenie i odbierz oferty od firm. ZLECAJ z LUMENA — bez opłat, bez pośredników.">
+  <meta name="author" content="LUMENA Creative" />
+  <link rel="canonical" href="https://zlecajzlumena.pl/pages/dodaj-zlecenie.html" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/image/favicon.png" type="image/png">
+  <meta name="theme-color" content="#0b0b0f" />
+
+  <!-- Fonts & CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css" />
 </head>
+
 <body>
+  <!-- HEADER -->
   <header class="topbar">
     <div class="wrap flex between center-v">
       <a href="/" class="logo">
-        <img src="/assets/images/logo-zlecajzlumena.png" alt="ZLECAJ z LUMENA" height="48">
+        <img src="/image/zlecaj-z-lumena.png" alt="ZLECAJ z LUMENA" height="48">
       </a>
       <nav class="nav">
         <a href="/pages/panel-klient.html">Panel klienta</a>
@@ -19,6 +32,7 @@
     </div>
   </header>
 
+  <!-- FORMULARZ -->
   <section class="form-section">
     <div class="wrap">
       <h1>Dodaj zlecenie</h1>
@@ -60,15 +74,41 @@
     </div>
   </section>
 
+  <!-- FOOTER -->
   <footer class="lumena-footer">
-    <div class="copy">© 2025 <span class="gold">LUMENA Creative</span> 💎</div>
+    <div class="wrap foot">
+      <div>
+        <h5>Sekcje</h5>
+        <a href="/pages/oferty.html">Zlecenia</a>
+        <a href="/pages/rejestracja.html">Rejestracja</a>
+        <a href="/pages/login.html">Logowanie</a>
+      </div>
+      <div>
+        <h5>Informacje</h5>
+        <a href="/pages/o-lumena.html">O LUMENA</a>
+        <a href="/pages/polityka.html">Polityka prywatności</a>
+        <a href="/pages/rodo.html">RODO</a>
+        <a href="/pages/bezpieczenstwo.html">Poradnik bezpieczeństwa</a>
+      </div>
+      <div>
+        <h5>Kontakt</h5>
+        <a href="mailto:kontakt.lumena.studio@gmail.com">kontakt.lumena.studio@gmail.com</a>
+        <a href="#">Instagram</a>
+        <a href="#">Pinterest</a>
+      </div>
+    </div>
+
+    <div class="copy">
+      © 2025 <span class="gold">LUMENA Creative</span> 💎  
+      <br><small>Wszystkie prawa zastrzeżone.</small>
+    </div>
   </footer>
 
+  <!-- SKRYPT DODAWANIA -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const form = document.getElementById("addOrderForm");
 
-      // jeśli nie ma tokenu, generujemy dla klienta
       if (!localStorage.getItem("lumena_user_token")) {
         localStorage.setItem("lumena_user_token", "USER_" + Math.random().toString(36).substring(2, 10));
       }
@@ -107,5 +147,104 @@
       });
     });
   </script>
+
+  <!-- BANER COOKIES -->
+  <div id="cookie-banner" class="cookie-banner" style="display:none;">
+    <div class="cookie-content">
+      <p>
+        🍪 Ta strona korzysta z plików cookie, aby zapewnić Ci najlepsze doświadczenie,  
+        analizować ruch oraz wyświetlać dopasowane reklamy Google.  
+        Więcej informacji znajdziesz w naszej  
+        <a href="/pages/cookies.html" target="_blank">Polityce plików cookies</a>.
+      </p>
+      <div class="cookie-actions">
+        <button id="acceptCookies" class="cta">Akceptuję</button>
+        <button id="declineCookies" class="cta secondary">Odrzuć</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const banner = document.getElementById("cookie-banner");
+    const accepted = localStorage.getItem("lumena_cookies_accepted");
+
+    if (!accepted) {
+      banner.style.display = "flex";
+    }
+
+    document.getElementById("acceptCookies").addEventListener("click", () => {
+      localStorage.setItem("lumena_cookies_accepted", "true");
+      banner.style.display = "none";
+    });
+
+    document.getElementById("declineCookies").addEventListener("click", () => {
+      localStorage.setItem("lumena_cookies_accepted", "false");
+      banner.style.display = "none";
+    });
+  });
+  </script>
+
+  <style>
+  .cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(15, 15, 15, 0.95);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-family: 'Inter', sans-serif;
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  .cookie-content {
+    max-width: 900px;
+    text-align: center;
+  }
+
+  .cookie-content p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .cookie-content a {
+    color: var(--gold);
+    text-decoration: underline;
+  }
+
+  .cookie-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .cookie-actions .cta {
+    background: var(--gold);
+    color: #000;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .cookie-actions .cta.secondary {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  </style>
 </body>
 </html>

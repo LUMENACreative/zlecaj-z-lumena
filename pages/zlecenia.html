@@ -11,12 +11,12 @@
   <link rel="canonical" href="https://zlecajzlumena.pl/pages/zlecenia.html" />
 
   <!-- Favicon -->
-  <link rel="icon" href="/assets/icons/favicon.png" type="image/png">
+  <link rel="icon" href="/image/favicon.png" type="image/png">
+  <meta name="theme-color" content="#0b0b0f" />
 
   <!-- Fonts & CSS -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css" />
-  <script defer src="/js/main.js"></script>
 </head>
 
 <body>
@@ -24,7 +24,7 @@
   <header class="topbar">
     <div class="wrap flex between center-v">
       <a href="/" class="logo">
-        <img src="/assets/images/logo-zlecajzlumena.png" alt="ZLECAJ z LUMENA logo" height="48" />
+        <img src="/image/zlecaj-z-lumena.png" alt="ZLECAJ z LUMENA logo" height="48" />
       </a>
       <nav class="nav">
         <a href="/pages/panel-firma.html">Panel firmy</a>
@@ -49,11 +49,11 @@
           <label for="kategoria">Kategoria</label>
           <select id="kategoria" name="kategoria">
             <option value="">Wszystkie</option>
-            <option value="remonty">Remonty</option>
-            <option value="malowanie">Malowanie</option>
-            <option value="tapetowanie">Tapetowanie</option>
-            <option value="kuchnie">Kuchnie</option>
-            <option value="lazienki">Łazienki</option>
+            <option value="Remonty">Remonty</option>
+            <option value="Malowanie">Malowanie</option>
+            <option value="Tapetowanie">Tapetowanie</option>
+            <option value="Kuchnie">Kuchnie</option>
+            <option value="Łazienki">Łazienki</option>
           </select>
         </div>
         <div class="filter-group">
@@ -67,49 +67,7 @@
       </form>
 
       <!-- LISTA ZLECEŃ -->
-      <div class="zlecenia-grid">
-        <!-- ZLECENIE 1 -->
-        <div class="zlecenie-card" data-id="1">
-          <h3>Remont łazienki 5m²</h3>
-          <p class="meta">Warszawa • dodano: 25.10.2025</p>
-          <p class="desc">
-            Kompleksowy remont łazienki w bloku. Skucie płytek, hydraulika, montaż armatury.  
-            Termin: listopad 2025. Materiały po stronie klienta.
-          </p>
-          <div class="order-actions">
-            <a href="/pages/szczegoly-zlecenia.html?id=1" class="cta secondary">Zobacz szczegóły</a>
-            <a href="/pages/szczegoly-zlecenia.html?id=1#zloz-oferte" class="cta">Złóż ofertę</a>
-          </div>
-        </div>
-
-        <!-- ZLECENIE 2 -->
-        <div class="zlecenie-card" data-id="2">
-          <h3>Malowanie mieszkania 60m²</h3>
-          <p class="meta">Kraków • dodano: 23.10.2025</p>
-          <p class="desc">
-            Szukam malarza do odświeżenia mieszkania — 3 pokoje + kuchnia.  
-            Farby po stronie wykonawcy. Termin: początek listopada.
-          </p>
-          <div class="order-actions">
-            <a href="/pages/szczegoly-zlecenia.html?id=2" class="cta secondary">Zobacz szczegóły</a>
-            <a href="/pages/szczegoly-zlecenia.html?id=2#zloz-oferte" class="cta">Złóż ofertę</a>
-          </div>
-        </div>
-
-        <!-- ZLECENIE 3 -->
-        <div class="zlecenie-card" data-id="3">
-          <h3>Projekt kuchni 10m²</h3>
-          <p class="meta">Gdańsk • dodano: 20.10.2025</p>
-          <p class="desc">
-            Potrzebuję projektu kuchni w stylu nowoczesnym.  
-            Wymagana wizualizacja 3D i lista materiałów.
-          </p>
-          <div class="order-actions">
-            <a href="/pages/szczegoly-zlecenia.html?id=3" class="cta secondary">Zobacz szczegóły</a>
-            <a href="/pages/szczegoly-zlecenia.html?id=3#zloz-oferte" class="cta">Złóż ofertę</a>
-          </div>
-        </div>
-      </div>
+      <div id="zleceniaContainer" class="zlecenia-grid"></div>
     </div>
   </section>
 
@@ -127,6 +85,7 @@
         <a href="/pages/o-lumena.html">O LUMENA</a>
         <a href="/pages/polityka.html">Polityka prywatności</a>
         <a href="/pages/rodo.html">RODO</a>
+        <a href="/pages/bezpieczenstwo.html">Poradnik bezpieczeństwa</a>
       </div>
       <div>
         <h5>Kontakt</h5>
@@ -141,5 +100,156 @@
       <br><small>Wszystkie prawa zastrzeżone.</small>
     </div>
   </footer>
+
+  <!-- SKRYPT: dynamiczne zlecenia -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const container = document.getElementById("zleceniaContainer");
+      const allOrders = JSON.parse(localStorage.getItem("lumena_orders") || "[]");
+
+      const renderOrders = (orders) => {
+        container.innerHTML = "";
+        if (!orders.length) {
+          container.innerHTML = "<p>Brak dostępnych zleceń 💎</p>";
+          return;
+        }
+
+        orders.slice().reverse().forEach(o => {
+          const card = document.createElement("div");
+          card.classList.add("zlecenie-card");
+          card.innerHTML = `
+            <h3>${o.tytul}</h3>
+            <p class="meta">${o.miasto} • dodano: ${o.data}</p>
+            <p class="desc">${o.opis}</p>
+            <div class="order-actions">
+              <a href="/pages/szczegoly-zlecenia.html?id=${o.id}" class="cta secondary">Zobacz szczegóły</a>
+              <a href="/pages/szczegoly-zlecenia.html?id=${o.id}#zloz-oferte" class="cta">Złóż ofertę</a>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      };
+
+      renderOrders(allOrders);
+
+      document.querySelector(".filters").addEventListener("submit", e => {
+        e.preventDefault();
+        const city = document.getElementById("miasto").value.trim().toLowerCase();
+        const cat = document.getElementById("kategoria").value;
+        const sort = document.getElementById("sort").value;
+
+        let filtered = allOrders.filter(o => {
+          const matchCity = !city || o.miasto.toLowerCase().includes(city);
+          const matchCat = !cat || o.kategoria === cat;
+          return matchCity && matchCat;
+        });
+
+        if (sort === "lokalizacja") {
+          filtered.sort((a, b) => a.miasto.localeCompare(b.miasto, "pl"));
+        } else {
+          filtered.sort((a, b) => new Date(b.data) - new Date(a.data));
+        }
+
+        renderOrders(filtered);
+      });
+    });
+  </script>
+
+  <!-- BANER COOKIES -->
+  <div id="cookie-banner" class="cookie-banner" style="display:none;">
+    <div class="cookie-content">
+      <p>
+        🍪 Ta strona korzysta z plików cookie, aby zapewnić Ci najlepsze doświadczenie,  
+        analizować ruch oraz wyświetlać dopasowane reklamy Google.  
+        Więcej informacji znajdziesz w naszej  
+        <a href="/pages/cookies.html" target="_blank">Polityce plików cookies</a>.
+      </p>
+      <div class="cookie-actions">
+        <button id="acceptCookies" class="cta">Akceptuję</button>
+        <button id="declineCookies" class="cta secondary">Odrzuć</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const banner = document.getElementById("cookie-banner");
+    const accepted = localStorage.getItem("lumena_cookies_accepted");
+
+    if (!accepted) banner.style.display = "flex";
+
+    document.getElementById("acceptCookies").addEventListener("click", () => {
+      localStorage.setItem("lumena_cookies_accepted", "true");
+      banner.style.display = "none";
+    });
+
+    document.getElementById("declineCookies").addEventListener("click", () => {
+      localStorage.setItem("lumena_cookies_accepted", "false");
+      banner.style.display = "none";
+    });
+  });
+  </script>
+
+  <style>
+  .cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(15, 15, 15, 0.95);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-family: 'Inter', sans-serif;
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  .cookie-content {
+    max-width: 900px;
+    text-align: center;
+  }
+
+  .cookie-content p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .cookie-content a {
+    color: var(--gold);
+    text-decoration: underline;
+  }
+
+  .cookie-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .cookie-actions .cta {
+    background: var(--gold);
+    color: #000;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .cookie-actions .cta.secondary {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  </style>
 </body>
 </html>

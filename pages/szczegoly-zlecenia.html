@@ -4,13 +4,26 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Szczegóły zlecenia — ZLECAJ z LUMENA</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Zobacz szczegóły zlecenia, opis prac i złóż ofertę jako wykonawca. ZLECAJ z LUMENA — darmowe zlecenia bez pośredników.">
+  <meta name="author" content="LUMENA Creative" />
+  <link rel="canonical" href="https://zlecajzlumena.pl/pages/szczegoly-zlecenia.html" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/image/favicon.png" type="image/png">
+  <meta name="theme-color" content="#0b0b0f" />
+
+  <!-- Fonts & CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 
 <body>
+  <!-- HEADER -->
   <header class="topbar">
     <div class="wrap flex between center-v">
-      <a href="/" class="logo"><img src="/assets/images/logo-zlecajzlumena.png" alt="ZLECAJ z LUMENA" height="48"></a>
+      <a href="/" class="logo"><img src="/image/zlecaj-z-lumena.png" alt="ZLECAJ z LUMENA" height="48"></a>
       <nav class="nav">
         <a href="/pages/panel-firma.html">Panel firmy</a>
         <a href="/pages/login.html">Wyloguj się</a>
@@ -18,6 +31,7 @@
     </div>
   </header>
 
+  <!-- SEKCJA SZCZEGÓŁÓW -->
   <section class="zlecenie-details">
     <div class="wrap">
       <h1 id="zlec-title">Zlecenie</h1>
@@ -26,7 +40,6 @@
       <div class="details-card">
         <h2>Opis zlecenia</h2>
         <p id="zlec-opis"></p>
-
         <button id="deleteOrderBtn" class="cta secondary" style="display:none;">Usuń zlecenie</button>
       </div>
 
@@ -49,8 +62,37 @@
     </div>
   </section>
 
-  <footer class="lumena-footer"><div class="copy">© 2025 <span class="gold">LUMENA Creative</span> 💎</div></footer>
+  <!-- FOOTER -->
+  <footer class="lumena-footer">
+    <div class="wrap foot">
+      <div>
+        <h5>Sekcje</h5>
+        <a href="/pages/oferty.html">Zlecenia</a>
+        <a href="/pages/rejestracja.html">Rejestracja</a>
+        <a href="/pages/login.html">Logowanie</a>
+      </div>
+      <div>
+        <h5>Informacje</h5>
+        <a href="/pages/o-lumena.html">O LUMENA</a>
+        <a href="/pages/polityka.html">Polityka prywatności</a>
+        <a href="/pages/rodo.html">RODO</a>
+        <a href="/pages/bezpieczenstwo.html">Poradnik bezpieczeństwa</a>
+      </div>
+      <div>
+        <h5>Kontakt</h5>
+        <a href="mailto:kontakt.lumena.studio@gmail.com">kontakt.lumena.studio@gmail.com</a>
+        <a href="#">Instagram</a>
+        <a href="#">Pinterest</a>
+      </div>
+    </div>
 
+    <div class="copy">
+      © 2025 <span class="gold">LUMENA Creative</span> 💎  
+      <br><small>Wszystkie prawa zastrzeżone.</small>
+    </div>
+  </footer>
+
+  <!-- SKRYPT FUNKCJONALNY -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const params = new URLSearchParams(window.location.search);
@@ -68,7 +110,7 @@
       document.getElementById("zlec-subtitle").textContent = `${order.miasto} • ${order.data} • ${order.kategoria}`;
       document.getElementById("zlec-opis").textContent = order.opis;
 
-      // pokaż przycisk usuwania tylko właścicielowi
+      // właściciel może usunąć zlecenie
       if (order.autorToken === userToken) {
         const btn = document.getElementById("deleteOrderBtn");
         btn.style.display = "inline-block";
@@ -123,5 +165,104 @@
       });
     });
   </script>
+
+  <!-- BANER COOKIES -->
+  <div id="cookie-banner" class="cookie-banner" style="display:none;">
+    <div class="cookie-content">
+      <p>
+        🍪 Ta strona korzysta z plików cookie, aby zapewnić Ci najlepsze doświadczenie,  
+        analizować ruch oraz wyświetlać dopasowane reklamy Google.  
+        Więcej informacji znajdziesz w naszej  
+        <a href="/pages/cookies.html" target="_blank">Polityce plików cookies</a>.
+      </p>
+      <div class="cookie-actions">
+        <button id="acceptCookies" class="cta">Akceptuję</button>
+        <button id="declineCookies" class="cta secondary">Odrzuć</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const banner = document.getElementById("cookie-banner");
+    const accepted = localStorage.getItem("lumena_cookies_accepted");
+
+    if (!accepted) {
+      banner.style.display = "flex";
+    }
+
+    document.getElementById("acceptCookies").addEventListener("click", () => {
+      localStorage.setItem("lumena_cookies_accepted", "true");
+      banner.style.display = "none";
+    });
+
+    document.getElementById("declineCookies").addEventListener("click", () => {
+      localStorage.setItem("lumena_cookies_accepted", "false");
+      banner.style.display = "none";
+    });
+  });
+  </script>
+
+  <style>
+  .cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(15, 15, 15, 0.95);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-family: 'Inter', sans-serif;
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  .cookie-content {
+    max-width: 900px;
+    text-align: center;
+  }
+
+  .cookie-content p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .cookie-content a {
+    color: var(--gold);
+    text-decoration: underline;
+  }
+
+  .cookie-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .cookie-actions .cta {
+    background: var(--gold);
+    color: #000;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .cookie-actions .cta.secondary {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  </style>
 </body>
 </html>

@@ -45,7 +45,7 @@
     </div>
   </header>
 
-  <!-- HERO / BANNER -->
+  <!-- HERO -->
   <section class="hero">
     <div class="wrap center">
       <h1>DARMOWE ZLECENIA<br><span class="gold">WYKONAWCY BEZ OPŁAT</span></h1>
@@ -109,7 +109,7 @@
   <section class="trust">
     <div class="wrap">
       <h2>Bezpieczne zlecenia, bez ukrytych kosztów</h2>
-      <p>Chronimy Twoje dane (RODO), a wszystkie kontakty są darmowe. Zobacz nasz <a href="/pages/poradnik.html">poradnik bezpieczeństwa</a>.</p>
+      <p>Chronimy Twoje dane (RODO), a wszystkie kontakty są darmowe. Zobacz nasz <a href="/pages/bezpieczenstwo.html">poradnik bezpieczeństwa</a>.</p>
     </div>
   </section>
 
@@ -127,6 +127,7 @@
         <a href="/pages/o-lumena.html">O LUMENA</a>
         <a href="/pages/polityka.html">Polityka prywatności</a>
         <a href="/pages/rodo.html">RODO</a>
+        <a href="/pages/bezpieczenstwo.html">Poradnik bezpieczeństwa</a>
       </div>
       <div>
         <h5>Kontakt</h5>
@@ -144,5 +145,104 @@
 
   <!-- ACCESS CONTROL -->
   <script src="/js/access-control.js"></script>
+
+  <!-- BANER COOKIES -->
+  <div id="cookie-banner" class="cookie-banner" style="display:none;">
+    <div class="cookie-content">
+      <p>
+        🍪 Ta strona korzysta z plików cookie, aby zapewnić Ci najlepsze doświadczenie,  
+        analizować ruch oraz wyświetlać dopasowane reklamy Google.  
+        Więcej informacji znajdziesz w naszej  
+        <a href="/pages/cookies.html" target="_blank">Polityce plików cookies</a>.
+      </p>
+      <div class="cookie-actions">
+        <button id="acceptCookies" class="cta">Akceptuję</button>
+        <button id="declineCookies" class="cta secondary">Odrzuć</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const banner = document.getElementById("cookie-banner");
+    const accepted = localStorage.getItem("lumena_cookies_accepted");
+
+    if (!accepted) {
+      banner.style.display = "flex";
+    }
+
+    document.getElementById("acceptCookies").addEventListener("click", () => {
+      localStorage.setItem("lumena_cookies_accepted", "true");
+      banner.style.display = "none";
+    });
+
+    document.getElementById("declineCookies").addEventListener("click", () => {
+      localStorage.setItem("lumena_cookies_accepted", "false");
+      banner.style.display = "none";
+    });
+  });
+  </script>
+
+  <style>
+  .cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(15, 15, 15, 0.95);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-family: 'Inter', sans-serif;
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  .cookie-content {
+    max-width: 900px;
+    text-align: center;
+  }
+
+  .cookie-content p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .cookie-content a {
+    color: var(--gold);
+    text-decoration: underline;
+  }
+
+  .cookie-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .cookie-actions .cta {
+    background: var(--gold);
+    color: #000;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .cookie-actions .cta.secondary {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  </style>
 </body>
 </html>
