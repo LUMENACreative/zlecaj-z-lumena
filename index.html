@@ -45,6 +45,16 @@
     </div>
   </header>
 
+  <!-- 🟨 BANER REKLAMOWY (np. Google AdSense lub partner) -->
+  <section class="ad-banner top-ad">
+    <div class="wrap center">
+      <!-- Przykładowe miejsce na reklamę -->
+      <div class="ad-placeholder">
+        Miejsce na reklamę 728x90 lub partnera 💎
+      </div>
+    </div>
+  </section>
+
   <!-- HERO -->
   <section class="hero">
     <div class="wrap center">
@@ -96,6 +106,15 @@
     </div>
   </section>
 
+  <!-- 🟦 SEKCJA PARTNERSKA / PROMOCYJNA -->
+  <section class="promo-banner">
+    <div class="wrap center">
+      <h2>💎 Partnerzy LUMENA</h2>
+      <p>Reklamuj swoją markę tutaj — przestrzeń dla naszych partnerów i sponsorów.</p>
+      <div class="ad-placeholder">Miejsce na baner 970x250</div>
+    </div>
+  </section>
+
   <!-- STATS -->
   <section class="stats">
     <div class="wrap grid-3 center">
@@ -136,7 +155,6 @@
         <a href="#">Pinterest</a>
       </div>
     </div>
-
     <div class="copy">
       © 2025 <span class="gold">LUMENA Creative</span> 💎  
       <br><small>Wszystkie prawa zastrzeżone.</small>
@@ -146,7 +164,7 @@
   <!-- ACCESS CONTROL -->
   <script src="/js/access-control.js"></script>
 
-  <!-- BANER COOKIES -->
+  <!-- COOKIE BANNER (pozostaje bez zmian) -->
   <div id="cookie-banner" class="cookie-banner" style="display:none;">
     <div class="cookie-content">
       <p>
@@ -167,15 +185,11 @@
     const banner = document.getElementById("cookie-banner");
     const accepted = localStorage.getItem("lumena_cookies_accepted");
 
-    if (!accepted) {
-      banner.style.display = "flex";
-    }
-
+    if (!accepted) banner.style.display = "flex";
     document.getElementById("acceptCookies").addEventListener("click", () => {
       localStorage.setItem("lumena_cookies_accepted", "true");
       banner.style.display = "none";
     });
-
     document.getElementById("declineCookies").addEventListener("click", () => {
       localStorage.setItem("lumena_cookies_accepted", "false");
       banner.style.display = "none";
@@ -184,65 +198,16 @@
   </script>
 
   <style>
-  .cookie-banner {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(15, 15, 15, 0.95);
-    border-top: 1px solid rgba(255,255,255,0.1);
-    color: #fff;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    font-family: 'Inter', sans-serif;
-    animation: fadeIn 0.6s ease-in-out;
-  }
-
-  .cookie-content {
-    max-width: 900px;
-    text-align: center;
-  }
-
-  .cookie-content p {
-    font-size: 14px;
-    line-height: 1.5;
-    margin-bottom: 10px;
-  }
-
-  .cookie-content a {
-    color: var(--gold);
-    text-decoration: underline;
-  }
-
-  .cookie-actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .cookie-actions .cta {
-    background: var(--gold);
-    color: #000;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-  }
-
-  .cookie-actions .cta.secondary {
-    background: transparent;
-    border: 1px solid var(--gold);
-    color: var(--gold);
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    .ad-placeholder {
+      background: rgba(255,255,255,0.05);
+      border: 1px dashed rgba(255,255,255,0.2);
+      color: var(--gold);
+      padding: 20px;
+      text-align: center;
+      border-radius: 8px;
+      font-size: 14px;
+      margin: 10px auto;
+    }
   </style>
 </body>
 </html>
