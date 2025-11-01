@@ -3,15 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lista zleceń — ZLECAJ z LUMENA</title>
+  <title>Aktualne zlecenia — ZLECAJ z LUMENA</title>
 
   <!-- SEO -->
-  <meta name="description" content="Aktualne zlecenia budowlane i remontowe. Wybierz kategorię, lokalizację i złóż ofertę — bez prowizji.">
+  <meta name="description" content="Przeglądaj najnowsze zlecenia remontowe, budowlane i projektowe. Wybierz kategorię, lokalizację i złóż ofertę — bez prowizji.">
   <meta name="author" content="LUMENA Creative" />
   <link rel="canonical" href="https://zlecajzlumena.pl/pages/zlecenia.html" />
 
   <!-- Favicon -->
-  <link rel="icon" href="/assets/icons/favicon.png" type="image/png">
+  <link rel="icon" href="/image/favicon.png" type="image/png">
+  <meta name="theme-color" content="#0b0b0f" />
 
   <!-- Fonts & CSS -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -23,7 +24,7 @@
   <header class="topbar">
     <div class="wrap flex between center-v">
       <a href="/" class="logo">
-        <img src="/assets/images/logo-zlecajzlumena.png" alt="ZLECAJ z LUMENA logo" height="48" />
+        <img src="/image/zlecaj-z-lumena.png" alt="ZLECAJ z LUMENA" height="60" />
       </a>
       <nav class="nav">
         <a href="/pages/panel-firma.html">Panel firmy</a>
@@ -36,17 +37,18 @@
   <section class="zlecenia-list">
     <div class="wrap">
       <h1>Aktualne zlecenia</h1>
-      <p class="subtitle">Przeglądaj najnowsze zlecenia od klientów i złóż ofertę 💎</p>
+      <p class="subtitle">Przeglądaj najnowsze zlecenia dodane przez klientów 💎</p>
 
       <!-- FILTRY -->
       <form class="filters">
         <div class="filter-group">
           <label for="miasto">Miasto</label>
-          <input type="text" id="miasto" name="miasto" placeholder="np. Warszawa">
+          <input type="text" id="miasto" placeholder="np. Warszawa">
         </div>
+
         <div class="filter-group">
           <label for="kategoria">Kategoria</label>
-          <select id="kategoria" name="kategoria">
+          <select id="kategoria">
             <option value="">Wszystkie</option>
             <option value="Remonty">Remonty</option>
             <option value="Malowanie">Malowanie</option>
@@ -55,19 +57,21 @@
             <option value="Łazienki">Łazienki</option>
           </select>
         </div>
+
         <div class="filter-group">
           <label for="sort">Sortuj</label>
-          <select id="sort" name="sort">
+          <select id="sort">
             <option value="najnowsze">Najnowsze</option>
             <option value="lokalizacja">Po lokalizacji</option>
           </select>
         </div>
+
         <button type="submit" class="cta small">Filtruj</button>
       </form>
 
-      <!-- LISTA ZLECEŃ -->
+      <!-- ZLECENIA -->
       <div class="zlecenia-grid">
-        <div class="zlecenie-card" data-id="1">
+        <div class="zlecenie-card">
           <h3>Remont łazienki 5m²</h3>
           <p class="meta">Warszawa • dodano: 25.10.2025</p>
           <p class="desc">
@@ -80,7 +84,7 @@
           </div>
         </div>
 
-        <div class="zlecenie-card" data-id="2">
+        <div class="zlecenie-card">
           <h3>Malowanie mieszkania 60m²</h3>
           <p class="meta">Kraków • dodano: 23.10.2025</p>
           <p class="desc">
@@ -93,7 +97,7 @@
           </div>
         </div>
 
-        <div class="zlecenie-card" data-id="3">
+        <div class="zlecenie-card">
           <h3>Projekt kuchni 10m²</h3>
           <p class="meta">Gdańsk • dodano: 20.10.2025</p>
           <p class="desc">
