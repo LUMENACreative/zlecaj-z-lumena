@@ -26,9 +26,7 @@
       <a href="/" class="logo">
         <img src="/image/zlecaj-z-lumena.png" alt="ZLECAJ z LUMENA logo" height="48" />
       </a>
-      <nav class="nav" id="topNav">
-        <!-- wypełniane skryptem zależnie od zalogowania -->
-      </nav>
+      <nav class="nav" id="topNav"></nav>
     </div>
   </header>
 
@@ -38,16 +36,13 @@
       <h1>Otrzymane oferty</h1>
       <p class="subtitle">Zobacz propozycje złożone przez wykonawców do Twoich zleceń 💎</p>
 
-      <!-- info dla niezalogowanych / bez zleceń -->
       <div id="infoBox" class="center" style="margin:20px 0;"></div>
 
-      <!-- SELEKTOR ZLECENIA (tylko jeśli są zlecenia) -->
-      <div id="selectorWrap" class="form-group" style="max-width: 480px; margin: 0 auto 30px; display:none;">
-        <label for="zlecenie-select" style="color: var(--gold); font-weight: 500;">Wybierz zlecenie</label>
-        <select id="zlecenie-select" name="zlecenie" style="width: 100%; padding: 12px 15px; border-radius: 10px; background-color: #111; color: var(--white); border: 1px solid rgba(255,255,255,0.1);"></select>
+      <div id="selectorWrap" class="form-group" style="max-width:480px;margin:0 auto 30px;display:none;">
+        <label for="zlecenie-select" style="color:var(--gold);font-weight:500;">Wybierz zlecenie</label>
+        <select id="zlecenie-select" name="zlecenie" style="width:100%;padding:12px 15px;border-radius:10px;background-color:#111;color:var(--white);border:1px solid rgba(255,255,255,0.1);"></select>
       </div>
 
-      <!-- LISTA OFERT -->
       <div id="offersWrap" class="offers"></div>
     </div>
   </section>
@@ -99,16 +94,14 @@
     </div>
   </div>
 
-  <!-- SKRYPT STRONY -->
+  <!-- 🔥 SKRYPT STRONY -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      /* === NAV zależnie od zalogowania === */
       const topNav = document.getElementById("topNav");
       const token = localStorage.getItem("lumena_user_token");
-      const userType = localStorage.getItem("userType"); // (z login.html) "client" | "company"
+      const userType = localStorage.getItem("userType");
 
       if (!token || userType !== "client") {
-        // Gość lub niewłaściwy typ — pokaż podstawową nawigację i komunikat
         topNav.innerHTML = `
           <a href="/">Strona główna</a>
           <a href="/pages/rejestracja.html">Rejestracja</a>
@@ -121,7 +114,6 @@
         `;
       }
 
-      /* === Dostęp do strony: tylko zalogowany klient === */
       const infoBox = document.getElementById("infoBox");
       const selectorWrap = document.getElementById("selectorWrap");
       const offersWrap = document.getElementById("offersWrap");
@@ -129,20 +121,19 @@
       if (!token || userType !== "client") {
         infoBox.innerHTML = `
           <p>Ta strona jest dostępna tylko dla zalogowanych klientów. 📩
-          <br><a class="cta" href="/pages/login.html" style="margin-top:10px; display:inline-block;">Zaloguj się</a></p>
+          <br><a class="cta" href="/pages/login.html" style="margin-top:10px;display:inline-block;">Zaloguj się</a></p>
         `;
         selectorWrap.style.display = "none";
         return;
       }
 
-      /* === Załaduj zlecenia użytkownika === */
       const allOrders = JSON.parse(localStorage.getItem("lumena_orders") || "[]");
       const myOrders = allOrders.filter(o => o.autorToken === token);
 
       if (myOrders.length === 0) {
         infoBox.innerHTML = `
           <p>Nie masz jeszcze żadnych zleceń. Dodaj pierwsze 💎</p>
-          <p><a class="cta" href="/pages/dodaj-zlecenie.html" style="margin-top:10px; display:inline-block;">+ Dodaj zlecenie</a></p>
+          <p><a class="cta" href="/pages/dodaj-zlecenie.html" style="margin-top:10px;display:inline-block;">+ Dodaj zlecenie</a></p>
         `;
         selectorWrap.style.display = "none";
         return;
@@ -151,16 +142,14 @@
       infoBox.innerHTML = "";
       selectorWrap.style.display = "block";
 
-      /* === Uzupełnij selektor zleceń === */
       const select = document.getElementById("zlecenie-select");
       select.innerHTML = myOrders
         .sort((a,b) => new Date(b.data) - new Date(a.data))
         .map(o => `<option value="${o.id}">${o.tytul} — ${o.miasto}</option>`)
         .join("");
 
-      /* === Render ofert dla wybranego zlecenia === */
-      const OFFERS_KEY = "lumena_offers";                 // { [orderId]: Offer[] }
-      const CHOSEN_KEY = "lumena_chosen_offers";          // { [orderId]: Offer }
+      const OFFERS_KEY = "lumena_offers";
+      const CHOSEN_KEY = "lumena_chosen_offers";
 
       const renderOffers = (orderId) => {
         const allOffers = JSON.parse(localStorage.getItem(OFFERS_KEY) || "{}");
@@ -191,9 +180,16 @@
             </div>
           `;
           offersWrap.appendChild(card);
+
+          /* 🟨 DODAJ REKLAMĘ CO 3 OFERTY */
+          if ((idx + 1) % 3 === 0) {
+            const ad = document.createElement("div");
+            ad.className = "ad-placeholder";
+            ad.textContent = "💎 Miejsce na reklamę partnera";
+            offersWrap.appendChild(ad);
+          }
         });
 
-        // obsługa wyboru oferty
         offersWrap.querySelectorAll(".choose-offer").forEach(btn => {
           btn.addEventListener("click", () => {
             const idx = Number(btn.dataset.idx);
@@ -207,13 +203,9 @@
         });
       };
 
-      // render dla pierwszej opcji
       renderOffers(select.value);
-
-      // render przy zmianie zlecenia
       select.addEventListener("change", () => renderOffers(select.value));
 
-      // Wylogowanie (jeśli jest przycisk)
       const logoutBtn = document.getElementById("logoutBtn");
       if (logoutBtn) {
         logoutBtn.addEventListener("click", () => {
@@ -226,11 +218,9 @@
       }
     });
 
-    /* === Baner cookies === */
     document.addEventListener("DOMContentLoaded", () => {
       const banner = document.getElementById("cookie-banner");
       const accepted = localStorage.getItem("lumena_cookies_accepted");
-
       if (!accepted) banner.style.display = "flex";
 
       const acc = document.getElementById("acceptCookies");
@@ -240,23 +230,17 @@
     });
   </script>
 
-  <!-- STYLES: cookie banner -->
   <style>
-    .cookie-banner {
-      position: fixed; bottom: 0; left: 0; width: 100%;
-      background: rgba(15, 15, 15, 0.95);
-      border-top: 1px solid rgba(255,255,255,0.1);
-      color: #fff; padding: 20px; display: none;
-      justify-content: center; align-items: center; z-index: 9999;
-      font-family: 'Inter', sans-serif; animation: fadeIn 0.6s ease-in-out;
+    .ad-placeholder {
+      background: rgba(255,255,255,0.05);
+      border: 1px dashed rgba(255,255,255,0.2);
+      color: var(--gold);
+      padding: 20px;
+      text-align: center;
+      border-radius: 8px;
+      font-size: 14px;
+      margin: 20px auto;
     }
-    .cookie-content { max-width: 900px; text-align: center; }
-    .cookie-content p { font-size: 14px; line-height: 1.5; margin-bottom: 10px; }
-    .cookie-content a { color: var(--gold); text-decoration: underline; }
-    .cookie-actions { display: flex; justify-content: center; gap: 10px; }
-    .cookie-actions .cta { background: var(--gold); color: #000; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-weight: 600; }
-    .cookie-actions .cta.secondary { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </body>
 </html>

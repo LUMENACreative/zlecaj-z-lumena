@@ -59,10 +59,12 @@
             <label for="kategoria">Kategoria *</label>
             <select id="kategoria" required>
               <option value="">Wybierz kategorię</option>
-              <option value="Remonty">Remonty</option>
-              <option value="Malowanie">Malowanie</option>
-              <option value="Kuchnie">Kuchnie</option>
-              <option value="Łazienki">Łazienki</option>
+              <option value="Remonty i budowa">Remonty i budowa</option>
+              <option value="Wykończenia wnętrz">Wykończenia wnętrz</option>
+              <option value="Ogród i zewnętrza">Ogród i zewnętrza</option>
+              <option value="Usługi projektowe">Usługi projektowe</option>
+              <option value="Transport i przeprowadzki">Transport i przeprowadzki</option>
+              <option value="Inne">Inne</option>
             </select>
           </div>
         </div>
@@ -104,51 +106,72 @@
     </div>
   </footer>
 
-  <!-- SKRYPT DODAWANIA -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const form = document.getElementById("addOrderForm");
+  <!-- 🔥 FIREBASE: zapisywanie zlecenia -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+    import { getFirestore, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-      if (!localStorage.getItem("lumena_user_token")) {
-        localStorage.setItem("lumena_user_token", "USER_" + Math.random().toString(36).substring(2, 10));
+    // Konfiguracja Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDgaH3j1FKB0mPkCqH7VG9vwhX1q82NkR0",
+      authDomain: "zlecaj-z-lumena.firebaseapp.com",
+      projectId: "zlecaj-z-lumena",
+      storageBucket: "zlecaj-z-lumena.appspot.com",
+      messagingSenderId: "46650398157",
+      appId: "1:46650398157:web:cd4d90782bb3039b8ce354",
+      measurementId: "G-W8TCWBDE7Y"
+    };
+
+    // Inicjalizacja Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const form = document.getElementById("addOrderForm");
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        alert("Musisz być zalogowany, aby dodać zlecenie 💎");
+        window.location.href = "/pages/login.html";
+        return;
       }
-      const userToken = localStorage.getItem("lumena_user_token");
 
-      form.addEventListener("submit", (e) => {
+      form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const tytul = form.tytul.value.trim();
-        const opis = form.opis.value.trim();
-        const miasto = form.miasto.value.trim();
-        const kategoria = form.kategoria.value;
+        const tytul = document.getElementById("tytul").value.trim();
+        const opis = document.getElementById("opis").value.trim();
+        const miasto = document.getElementById("miasto").value.trim();
+        const kategoria = document.getElementById("kategoria").value;
 
         if (!tytul || !opis || !miasto || !kategoria) {
           alert("Uzupełnij wszystkie pola 💎");
           return;
         }
 
-        const id = "ZL_" + Date.now();
-        const newOrder = {
-          id,
-          tytul,
-          opis,
-          miasto,
-          kategoria,
-          data: new Date().toLocaleDateString("pl-PL"),
-          autorToken: userToken
-        };
+        try {
+          const docRef = await addDoc(collection(db, "zlecenia"), {
+            tytul,
+            opis,
+            miasto,
+            kategoria,
+            autorId: user.uid,
+            autorEmail: user.email,
+            createdAt: serverTimestamp()
+          });
 
-        const allOrders = JSON.parse(localStorage.getItem("lumena_orders") || "[]");
-        allOrders.push(newOrder);
-        localStorage.setItem("lumena_orders", JSON.stringify(allOrders));
-
-        alert("Zlecenie zostało dodane ✨");
-        window.location.href = `/pages/szczegoly-zlecenia.html?id=${id}`;
+          alert("✅ Zlecenie zostało dodane pomyślnie!");
+          window.location.href = `/pages/szczegoly-zlecenia.html?id=${docRef.id}`;
+        } catch (err) {
+          console.error("❌ Błąd dodawania zlecenia:", err);
+          alert("Wystąpił błąd podczas zapisu. Spróbuj ponownie.");
+        }
       });
     });
   </script>
 
-  <!-- BANER COOKIES -->
+  <!-- COOKIE BANNER -->
   <div id="cookie-banner" class="cookie-banner" style="display:none;">
     <div class="cookie-content">
       <p>
@@ -169,9 +192,7 @@
     const banner = document.getElementById("cookie-banner");
     const accepted = localStorage.getItem("lumena_cookies_accepted");
 
-    if (!accepted) {
-      banner.style.display = "flex";
-    }
+    if (!accepted) banner.style.display = "flex";
 
     document.getElementById("acceptCookies").addEventListener("click", () => {
       localStorage.setItem("lumena_cookies_accepted", "true");
@@ -186,65 +207,12 @@
   </script>
 
   <style>
-  .cookie-banner {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(15, 15, 15, 0.95);
-    border-top: 1px solid rgba(255,255,255,0.1);
-    color: #fff;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    font-family: 'Inter', sans-serif;
-    animation: fadeIn 0.6s ease-in-out;
-  }
-
-  .cookie-content {
-    max-width: 900px;
-    text-align: center;
-  }
-
-  .cookie-content p {
-    font-size: 14px;
-    line-height: 1.5;
-    margin-bottom: 10px;
-  }
-
-  .cookie-content a {
-    color: var(--gold);
-    text-decoration: underline;
-  }
-
-  .cookie-actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .cookie-actions .cta {
-    background: var(--gold);
-    color: #000;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-  }
-
-  .cookie-actions .cta.secondary {
-    background: transparent;
-    border: 1px solid var(--gold);
-    color: var(--gold);
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    .form-section { padding: 60px 0; }
+    .zlecenie-form .form-group { margin-bottom: 20px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 768px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
   </style>
 </body>
 </html>

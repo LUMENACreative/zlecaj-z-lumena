@@ -5,16 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Szczegóły zlecenia — ZLECAJ z LUMENA</title>
 
-  <!-- SEO -->
-  <meta name="description" content="Zobacz szczegóły zlecenia, opis prac i złóż ofertę jako wykonawca. ZLECAJ z LUMENA — darmowe zlecenia bez pośredników.">
+  <meta name="description" content="Zobacz szczegóły zlecenia, opis prac i oferty firm. Skontaktuj się z wykonawcą bez pośredników — ZLECAJ z LUMENA.">
   <meta name="author" content="LUMENA Creative" />
   <link rel="canonical" href="https://zlecajzlumena.pl/pages/szczegoly-zlecenia.html" />
 
-  <!-- Favicon -->
   <link rel="icon" href="/image/favicon.png" type="image/png">
   <meta name="theme-color" content="#0b0b0f" />
-
-  <!-- Fonts & CSS -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css" />
 </head>
@@ -23,10 +19,12 @@
   <!-- HEADER -->
   <header class="topbar">
     <div class="wrap flex between center-v">
-      <a href="/" class="logo"><img src="/image/zlecaj-z-lumena.png" alt="ZLECAJ z LUMENA" height="48"></a>
+      <a href="/" class="logo">
+        <img src="/image/zlecaj-z-lumena.png" alt="ZLECAJ z LUMENA" height="48">
+      </a>
       <nav class="nav">
-        <a href="/pages/panel-firma.html">Panel firmy</a>
-        <a href="/pages/login.html">Wyloguj się</a>
+        <a href="/pages/panel-klient.html">Panel klienta</a>
+        <a href="#" id="logoutLink">Wyloguj się</a>
       </nav>
     </div>
   </header>
@@ -34,8 +32,8 @@
   <!-- SEKCJA SZCZEGÓŁÓW -->
   <section class="zlecenie-details">
     <div class="wrap">
-      <h1 id="zlec-title">Zlecenie</h1>
-      <p class="subtitle" id="zlec-subtitle"></p>
+      <h1 id="zlec-title">Ładowanie...</h1>
+      <p id="zlec-subtitle" class="subtitle"></p>
 
       <div class="details-card">
         <h2>Opis zlecenia</h2>
@@ -43,20 +41,8 @@
         <button id="deleteOrderBtn" class="cta secondary" style="display:none;">Usuń zlecenie</button>
       </div>
 
-      <div id="zloz-oferte" class="offer-form-wrap">
-        <h2 class="section-title">Złóż swoją ofertę</h2>
-        <form id="offerForm" class="offer-form zlecenie-form">
-          <div class="form-group grid-2">
-            <div><label for="firma">Nazwa firmy *</label><input type="text" id="firma" required></div>
-            <div><label for="kwota">Kwota (PLN) *</label><input type="number" id="kwota" required></div>
-          </div>
-          <div class="form-group"><label for="opis">Opis *</label><textarea id="opis" rows="4" required></textarea></div>
-          <div class="form-actions center"><button type="submit" class="cta">Wyślij ofertę</button></div>
-        </form>
-      </div>
-
       <div class="offers-list">
-        <h2 class="section-title">Złożone oferty</h2>
+        <h2 class="section-title">Złożone oferty firm</h2>
         <div id="offersContainer" class="offers"></div>
       </div>
     </div>
@@ -64,109 +50,146 @@
 
   <!-- FOOTER -->
   <footer class="lumena-footer">
-    <div class="wrap foot">
-      <div>
-        <h5>Sekcje</h5>
-        <a href="/pages/oferty.html">Zlecenia</a>
-        <a href="/pages/rejestracja.html">Rejestracja</a>
-        <a href="/pages/login.html">Logowanie</a>
-      </div>
-      <div>
-        <h5>Informacje</h5>
-        <a href="/pages/o-lumena.html">O LUMENA</a>
-        <a href="/pages/polityka.html">Polityka prywatności</a>
-        <a href="/pages/rodo.html">RODO</a>
-        <a href="/pages/bezpieczenstwo.html">Poradnik bezpieczeństwa</a>
-      </div>
-      <div>
-        <h5>Kontakt</h5>
-        <a href="mailto:kontakt.lumena.studio@gmail.com">kontakt.lumena.studio@gmail.com</a>
-        <a href="#">Instagram</a>
-        <a href="#">Pinterest</a>
-      </div>
-    </div>
-
     <div class="copy">
       © 2025 <span class="gold">LUMENA Creative</span> 💎  
       <br><small>Wszystkie prawa zastrzeżone.</small>
     </div>
   </footer>
 
-  <!-- SKRYPT FUNKCJONALNY -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const params = new URLSearchParams(window.location.search);
-      const id = params.get("id");
-      const userToken = localStorage.getItem("lumena_user_token");
-      const allOrders = JSON.parse(localStorage.getItem("lumena_orders") || "[]");
-      const order = allOrders.find(o => o.id === id);
+  <!-- 🔥 FIREBASE -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, getDocs, deleteDoc, collection } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-      if (!order) {
-        document.body.innerHTML = "<h2 style='text-align:center;margin-top:50px;'>Nie znaleziono zlecenia.</h2>";
+    // 🔧 Konfiguracja Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDgaH3j1FKB0mPkCqH7VG9vwhX1q82NkR0",
+      authDomain: "zlecaj-z-lumena.firebaseapp.com",
+      projectId: "zlecaj-z-lumena",
+      storageBucket: "zlecaj-z-lumena.appspot.com",
+      messagingSenderId: "46650398157",
+      appId: "1:46650398157:web:cd4d90782bb3039b8ce354",
+      measurementId: "G-W8TCWBDE7Y"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    const titleEl = document.getElementById("zlec-title");
+    const subtitleEl = document.getElementById("zlec-subtitle");
+    const opisEl = document.getElementById("zlec-opis");
+    const deleteBtn = document.getElementById("deleteOrderBtn");
+    const offersContainer = document.getElementById("offersContainer");
+
+    let currentUser = null;
+
+    // 🔒 Wylogowanie
+    document.getElementById("logoutLink").addEventListener("click", async (e) => {
+      e.preventDefault();
+      await signOut(auth);
+      window.location.href = "/pages/login.html";
+    });
+
+    // 🔐 Sprawdzenie logowania
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        alert("Musisz być zalogowany, aby zobaczyć szczegóły zlecenia 💎");
+        window.location.href = "/pages/login.html";
         return;
       }
 
-      document.getElementById("zlec-title").textContent = order.tytul;
-      document.getElementById("zlec-subtitle").textContent = `${order.miasto} • ${order.data} • ${order.kategoria}`;
-      document.getElementById("zlec-opis").textContent = order.opis;
+      currentUser = user;
+      await loadOrder();
+      await loadOffers();
+    });
 
-      // właściciel może usunąć zlecenie
-      if (order.autorToken === userToken) {
-        const btn = document.getElementById("deleteOrderBtn");
-        btn.style.display = "inline-block";
-        btn.addEventListener("click", () => {
-          if (confirm("Czy na pewno chcesz usunąć to zlecenie?")) {
-            const updated = allOrders.filter(o => o.id !== id);
-            localStorage.setItem("lumena_orders", JSON.stringify(updated));
-            alert("Zlecenie zostało usunięte 🗑️");
-            window.location.href = "/pages/panel-klient.html";
-          }
-        });
-      }
+    // 📦 Pobieranie danych zlecenia
+    async function loadOrder() {
+      try {
+        const docRef = doc(db, "zlecenia", id);
+        const docSnap = await getDoc(docRef);
 
-      // oferty
-      const offersContainer = document.getElementById("offersContainer");
-      const offerForm = document.getElementById("offerForm");
-      const allOffers = JSON.parse(localStorage.getItem("lumena_offers") || "{}");
-
-      const renderOffers = () => {
-        const offers = allOffers[id] || [];
-        offersContainer.innerHTML = "";
-        if (!offers.length) {
-          offersContainer.innerHTML = "<p>Brak ofert dla tego zlecenia.</p>";
+        if (!docSnap.exists()) {
+          document.body.innerHTML = "<h2 style='text-align:center;margin-top:50px;'>Nie znaleziono zlecenia.</h2>";
           return;
         }
-        offers.slice().reverse().forEach(o => {
+
+        const data = docSnap.data();
+        titleEl.textContent = data.tytul || "Bez tytułu";
+        subtitleEl.textContent = `${data.miasto || "Nieznane miasto"} • ${data.kategoria || "Brak kategorii"}`;
+        opisEl.textContent = data.opis || "Brak opisu.";
+
+        if (data.autorId === currentUser.uid) {
+          deleteBtn.style.display = "inline-block";
+          deleteBtn.addEventListener("click", async () => {
+            if (confirm("Czy na pewno chcesz usunąć to zlecenie?")) {
+              await deleteDoc(docRef);
+              alert("Zlecenie zostało usunięte 🗑️");
+              window.location.href = "/pages/panel-klient.html";
+            }
+          });
+        }
+      } catch (err) {
+        console.error("❌ Błąd pobierania zlecenia:", err);
+        alert("Nie udało się wczytać zlecenia.");
+      }
+    }
+
+    // 📋 Wczytanie ofert z danymi kontaktowymi firmy
+    async function loadOffers() {
+      offersContainer.innerHTML = "<p>Ładowanie ofert...</p>";
+      try {
+        const querySnapshot = await getDocs(collection(db, "zlecenia", id, "oferty"));
+        if (querySnapshot.empty) {
+          offersContainer.innerHTML = "<p>Brak ofert dla tego zlecenia 💡</p>";
+          return;
+        }
+
+        offersContainer.innerHTML = "";
+        for (const docSnap of querySnapshot.docs) {
+          const o = docSnap.data();
+          const created = o.createdAt?.toDate ? o.createdAt.toDate().toLocaleString("pl-PL") : "—";
+
+          // 📞 Pobierz dane firmy z kolekcji "users"
+          let kontaktHTML = "<em>Brak danych kontaktowych</em>";
+          try {
+            const userRef = doc(db, "users", o.autorId);
+            const userSnap = await getDoc(userRef);
+            if (userSnap.exists()) {
+              const u = userSnap.data();
+              kontaktHTML = `
+                <p><strong>📞 Telefon:</strong> ${u.telefon || "nie podano"}</p>
+                <p><strong>✉️ E-mail:</strong> <a href="mailto:${u.email}">${u.email}</a></p>
+              `;
+            }
+          } catch (err) {
+            console.warn("Nie udało się pobrać danych kontaktowych:", err);
+          }
+
           const div = document.createElement("div");
           div.classList.add("offer-card");
           div.innerHTML = `
-            <h3>${o.firma}</h3>
-            <p><strong>Kwota:</strong> ${o.kwota} PLN</p>
-            <p>${o.opis}</p>
-            <a href="/pages/profil-firmy.html" class="cta small">Zobacz profil firmy</a>
+            <h3>🏢 ${o.firma}</h3>
+            <p><strong>💰 Kwota:</strong> ${o.kwota} PLN</p>
+            <p><strong>📝 Opis:</strong> ${o.opis}</p>
+            ${kontaktHTML}
+            <small>📅 Dodano: ${created}</small>
           `;
           offersContainer.appendChild(div);
-        });
-      };
-      renderOffers();
-
-      offerForm.addEventListener("submit", e => {
-        e.preventDefault();
-        const firma = offerForm.firma.value.trim();
-        const kwota = offerForm.kwota.value.trim();
-        const opis = offerForm.opis.value.trim();
-        if (!firma || !kwota || !opis) return alert("Uzupełnij wszystkie pola 💎");
-        allOffers[id] = allOffers[id] || [];
-        allOffers[id].push({ firma, kwota, opis, date: new Date().toISOString() });
-        localStorage.setItem("lumena_offers", JSON.stringify(allOffers));
-        offerForm.reset();
-        renderOffers();
-        alert("Oferta została zapisana ✨");
-      });
-    });
+        }
+      } catch (err) {
+        console.error("❌ Błąd pobierania ofert:", err);
+        offersContainer.innerHTML = "<p>Nie udało się pobrać ofert.</p>";
+      }
+    }
   </script>
 
-  <!-- BANER COOKIES -->
+  <!-- 🍪 BANER COOKIES -->
   <div id="cookie-banner" class="cookie-banner" style="display:none;">
     <div class="cookie-content">
       <p>
@@ -186,16 +209,11 @@
   document.addEventListener("DOMContentLoaded", () => {
     const banner = document.getElementById("cookie-banner");
     const accepted = localStorage.getItem("lumena_cookies_accepted");
-
-    if (!accepted) {
-      banner.style.display = "flex";
-    }
-
+    if (!accepted) banner.style.display = "flex";
     document.getElementById("acceptCookies").addEventListener("click", () => {
       localStorage.setItem("lumena_cookies_accepted", "true");
       banner.style.display = "none";
     });
-
     document.getElementById("declineCookies").addEventListener("click", () => {
       localStorage.setItem("lumena_cookies_accepted", "false");
       banner.style.display = "none";
@@ -204,65 +222,25 @@
   </script>
 
   <style>
-  .cookie-banner {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(15, 15, 15, 0.95);
-    border-top: 1px solid rgba(255,255,255,0.1);
-    color: #fff;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    font-family: 'Inter', sans-serif;
-    animation: fadeIn 0.6s ease-in-out;
-  }
-
-  .cookie-content {
-    max-width: 900px;
-    text-align: center;
-  }
-
-  .cookie-content p {
-    font-size: 14px;
-    line-height: 1.5;
-    margin-bottom: 10px;
-  }
-
-  .cookie-content a {
-    color: var(--gold);
-    text-decoration: underline;
-  }
-
-  .cookie-actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .cookie-actions .cta {
-    background: var(--gold);
-    color: #000;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-  }
-
-  .cookie-actions .cta.secondary {
-    background: transparent;
-    border: 1px solid var(--gold);
-    color: var(--gold);
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    .details-card, .offer-card {
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .offers {
+      display: grid;
+      gap: 20px;
+    }
+    .offer-card h3 {
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .offer-card a {
+      color: var(--gold);
+      text-decoration: underline;
+    }
   </style>
 </body>
 </html>

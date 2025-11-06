@@ -28,7 +28,7 @@
       </a>
       <nav class="nav">
         <a href="/">Strona główna</a>
-        <a href="/pages/oferty.html">Zlecenia</a>
+        <a href="/pages/zlecenia.html">Zlecenia</a>
         <a href="/pages/login.html" class="cta">Zaloguj się</a>
       </nav>
     </div>
@@ -54,7 +54,7 @@
 
         <div class="form-group">
           <label for="haslo">Hasło *</label>
-          <input type="password" id="haslo" name="haslo" placeholder="Min. 6 znaków" required>
+          <input type="password" id="haslo" name="haslo" placeholder="Min. 6 znaków" required minlength="6">
         </div>
 
         <div class="form-group checkbox">
@@ -79,14 +79,55 @@
     </div>
   </footer>
 
-  <script>
-    // zapisanie danych w localStorage i przekierowanie
-    document.getElementById("formKlient").addEventListener("submit", function(e) {
+  <!-- 🔥 FIREBASE — REJESTRACJA KLIENTA -->
+  <script type="module">
+    import { auth, db } from "/js/firebase.js";
+    import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+    import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+    const form = document.getElementById("formKlient");
+
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      localStorage.setItem("loggedIn", true);
-      localStorage.setItem("userType", "client");
-      alert("Konto klienta zostało utworzone pomyślnie!");
-      window.location.href = "/pages/panel-klient.html";
+
+      const imie = document.getElementById("imie").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const haslo = document.getElementById("haslo").value.trim();
+
+      if (!imie || !email || !haslo) {
+        alert("Uzupełnij wszystkie pola.");
+        return;
+      }
+
+      try {
+        // Tworzenie konta Firebase Auth
+        const userCredential = await createUserWithEmailAndPassword(auth, email, haslo);
+        const user = userCredential.user;
+
+        // Zapis danych do Firestore
+        await setDoc(doc(db, "uzytkownicy", user.uid), {
+          typ: "client",
+          imie,
+          email,
+          createdAt: serverTimestamp()
+        });
+
+        // LocalStorage + przekierowanie
+        localStorage.setItem("loggedIn", "true");
+        localStorage.setItem("userEmail", email);
+        localStorage.setItem("userType", "client");
+
+        alert("✅ Konto klienta zostało utworzone pomyślnie!");
+        window.location.href = "/pages/panel-klient.html";
+
+      } catch (error) {
+        console.error("❌ Błąd rejestracji:", error);
+        if (error.code === "auth/email-already-in-use") {
+          alert("Ten adres e-mail jest już zarejestrowany.");
+        } else {
+          alert("Błąd: " + error.message);
+        }
+      }
     });
   </script>
 

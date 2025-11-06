@@ -24,9 +24,6 @@
   <!-- Fonts & CSS -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css" />
-
-  <!-- Scripts -->
-  <script defer src="/js/main.js"></script>
 </head>
 
 <body>
@@ -37,8 +34,8 @@
         <img src="/image/zlecaj-z-lumena.png" alt="ZLECAJ z LUMENA logo" height="48" />
       </a>
       <nav class="nav">
-        <a id="addJobBtn" href="#">Dodaj zlecenie</a>
-        <a id="browseJobsBtn" href="#">Przeglądaj zlecenia</a>
+        <a id="addJobBtn" href="/pages/dodaj-zlecenie.html">Dodaj zlecenie</a>
+        <a id="browseJobsBtn" href="/pages/zlecenia.html">Przeglądaj zlecenia</a>
         <a href="/pages/rejestracja.html">Rejestracja</a>
         <a href="/pages/login.html" class="cta">Zaloguj się</a>
       </nav>
@@ -58,7 +55,7 @@
       <h1>DARMOWE ZLECENIA<br><span class="gold">WYKONAWCY BEZ OPŁAT</span></h1>
       <p>Łączymy klientów i firmy w stylu <strong>LUMENA</strong> 💎</p>
       <div class="actions">
-        <a id="addJobBtnHero" href="#" class="cta">Dodaj zlecenie</a>
+        <a id="addJobBtnHero" href="/pages/dodaj-zlecenie.html" class="cta">Dodaj zlecenie</a>
         <a href="/pages/rejestracja.html" class="cta secondary">Zarejestruj się</a>
       </div>
     </div>
@@ -69,9 +66,21 @@
     <div class="wrap">
       <h2>Jak to działa?</h2>
       <div class="grid-3">
-        <div class="step"><span class="icon">✏️</span><h3>Dodaj zlecenie</h3><p>Wypełnij prosty formularz, opisz czego potrzebujesz i dodaj lokalizację.</p></div>
-        <div class="step"><span class="icon">🧰</span><h3>Odbierz oferty</h3><p>Firmy skontaktują się z Tobą bezpośrednio — bez prowizji i pośredników.</p></div>
-        <div class="step"><span class="icon">🤝</span><h3>Wybierz wykonawcę</h3><p>Porównaj oferty, sprawdź profile i wybierz najlepszą firmę.</p></div>
+        <div class="step">
+          <span class="icon">✏️</span>
+          <h3>Dodaj zlecenie</h3>
+          <p>Wypełnij prosty formularz, opisz czego potrzebujesz i dodaj lokalizację.</p>
+        </div>
+        <div class="step">
+          <span class="icon">🧰</span>
+          <h3>Odbierz oferty</h3>
+          <p>Firmy skontaktują się z Tobą bezpośrednio — bez prowizji i pośredników.</p>
+        </div>
+        <div class="step">
+          <span class="icon">🤝</span>
+          <h3>Wybierz wykonawcę</h3>
+          <p>Porównaj oferty, sprawdź profile i wybierz najlepszą firmę.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -81,12 +90,12 @@
     <div class="wrap">
       <h2>Kategorie zleceń</h2>
       <div class="grid-3">
-        <a href="/pages/kategorie.html#remonty" class="cat-card">🏠 Remonty i budowa</a>
-        <a href="/pages/kategorie.html#wykonczenia" class="cat-card">🎨 Wykończenia wnętrz</a>
-        <a href="/pages/kategorie.html#ogrod" class="cat-card">🌳 Ogród i zewnętrza</a>
-        <a href="/pages/kategorie.html#projektowanie" class="cat-card">💻 Usługi projektowe</a>
-        <a href="/pages/kategorie.html#transport" class="cat-card">🚚 Transport i przeprowadzki</a>
-        <a href="/pages/kategorie.html#inne" class="cat-card">🧩 Inne zlecenia</a>
+        <a href="#" class="cat-card" data-cat="Remonty i budowa">🏠 Remonty i budowa</a>
+        <a href="#" class="cat-card" data-cat="Wykończenia wnętrz">🎨 Wykończenia wnętrz</a>
+        <a href="#" class="cat-card" data-cat="Ogród i zewnętrza">🌳 Ogród i zewnętrza</a>
+        <a href="#" class="cat-card" data-cat="Usługi projektowe">💻 Usługi projektowe</a>
+        <a href="#" class="cat-card" data-cat="Transport i przeprowadzki">🚚 Transport i przeprowadzki</a>
+        <a href="#" class="cat-card" data-cat="Inne">🧩 Inne zlecenia</a>
       </div>
     </div>
   </section>
@@ -149,10 +158,12 @@
   <!-- COOKIE BANNER -->
   <div id="cookie-banner" class="cookie-banner" style="display:none;">
     <div class="cookie-content">
-      <p>🍪 Ta strona korzysta z plików cookie, aby zapewnić Ci najlepsze doświadczenie,  
-      analizować ruch oraz wyświetlać dopasowane reklamy Google.  
-      Więcej informacji znajdziesz w naszej  
-      <a href="/pages/cookies.html" target="_blank">Polityce plików cookies</a>.</p>
+      <p>
+        🍪 Ta strona korzysta z plików cookie, aby zapewnić Ci najlepsze doświadczenie,  
+        analizować ruch oraz wyświetlać dopasowane reklamy Google.  
+        Więcej informacji znajdziesz w naszej  
+        <a href="/pages/cookies.html" target="_blank">Polityce plików cookies</a>.
+      </p>
       <div class="cookie-actions">
         <button id="acceptCookies" class="cta">Akceptuję</button>
         <button id="declineCookies" class="cta secondary">Odrzuć</button>
@@ -160,36 +171,50 @@
     </div>
   </div>
 
-  <!-- 🔥 FIREBASE TEST -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+  <!-- 🔥 SKRYPT LOGIKI STRONY GŁÓWNEJ -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const banner = document.getElementById("cookie-banner");
+      const accepted = localStorage.getItem("lumena_cookies_accepted");
+      if (!accepted) banner.style.display = "flex";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDgaH3j1FKB0mPkCqH7VG9vwhX1q82NkR0",
-      authDomain: "zlecaj-z-lumena.firebaseapp.com",
-      projectId: "zlecaj-z-lumena",
-      storageBucket: "zlecaj-z-lumena.appspot.com",
-      messagingSenderId: "46650398157",
-      appId: "1:46650398157:web:cd4d90782bb3039b8ce354",
-      measurementId: "G-W8TCWBDE7Y"
-    };
+      document.getElementById("acceptCookies").addEventListener("click", () => {
+        localStorage.setItem("lumena_cookies_accepted", "true");
+        banner.style.display = "none";
+      });
+      document.getElementById("declineCookies").addEventListener("click", () => {
+        localStorage.setItem("lumena_cookies_accepted", "false");
+        banner.style.display = "none";
+      });
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+      // 🔐 Kliknięcie w kategorię — sprawdzamy typ konta
+      document.querySelectorAll(".cat-card").forEach(link => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const cat = link.dataset.cat;
+          const token = localStorage.getItem("lumena_user_token");
+          const userType = localStorage.getItem("userType");
 
-    async function testFirebase() {
-      try {
-        const testCol = collection(db, "test");
-        const snapshot = await getDocs(testCol);
-        console.log("🔥 Połączenie z Firebase działa! Dokumenty:", snapshot.size);
-      } catch (err) {
-        console.error("❌ Błąd połączenia z Firebase:", err);
-      }
-    }
+          if (!token) {
+            alert("Aby przeglądać zlecenia, zaloguj się jako firma 💼");
+            window.location.href = "/pages/login.html";
+            return;
+          }
 
-    testFirebase();
+          if (userType === "company") {
+            window.location.href = `/pages/zlecenia.html?kategoria=${encodeURIComponent(cat)}`;
+          } else if (userType === "client") {
+            alert("Konto klienta nie ma dostępu do listy wszystkich zleceń 💎");
+          } else {
+            window.location.href = "/pages/login.html";
+          }
+        });
+      });
+    });
   </script>
+
+  <!-- 🔗 TEST FIREBASE STORAGE -->
+  <script type="module" src="/js/firebase-storage-test.js"></script>
 
   <style>
     .ad-placeholder {

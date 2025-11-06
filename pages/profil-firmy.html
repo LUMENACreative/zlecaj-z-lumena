@@ -5,16 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Profil firmy — ZLECAJ z LUMENA</title>
 
-  <!-- SEO -->
-  <meta name="description" content="Profil wykonawcy — zobacz ofertę, opis działalności i realizacje. Wybierz najlepszego fachowca na ZLECAJ z LUMENA.">
+  <meta name="description" content="Profil wykonawcy — edytuj dane firmy, dodawaj zdjęcia i filmy realizacji oraz przeglądaj opinie klientów.">
   <meta name="author" content="LUMENA Creative" />
   <link rel="canonical" href="https://zlecajzlumena.pl/pages/profil-firmy.html" />
-
-  <!-- Favicon -->
   <link rel="icon" href="/image/favicon.png" type="image/png">
   <meta name="theme-color" content="#0b0b0f" />
-
-  <!-- Fonts & CSS -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css" />
 </head>
@@ -24,12 +19,9 @@
   <header class="topbar panel-header">
     <div class="wrap flex between center-v">
       <div class="logo-area flex center-v">
-        <a href="/" class="logo">
-          <img src="/image/zlecaj-z-lumena.png" alt="ZLECAJ z LUMENA logo" height="64" />
-        </a>
+        <a href="/" class="logo"><img src="/image/zlecaj-z-lumena.png" height="64" alt="ZLECAJ z LUMENA" /></a>
         <span class="panel-title">Profil firmy</span>
       </div>
-
       <nav class="panel-nav flex center-v">
         <a href="/pages/panel-firma.html" class="cta">Panel Wykonawcy</a>
         <button id="logoutBtn" class="cta secondary">Wyloguj się</button>
@@ -37,73 +29,93 @@
     </div>
   </header>
 
-  <!-- PROFIL FIRMY -->
+  <!-- PROFIL -->
   <section class="firm-profile">
     <div class="wrap">
-      <div class="profile-header">
-        <div class="avatar">🏗️</div>
-        <div class="info">
-          <h1 id="firmName">Golden Build Sp. z o.o.</h1>
-          <p id="firmBranch" class="branch">Remonty i wykończenia wnętrz</p>
-          <p id="firmLocation" class="location">Warszawa, mazowieckie</p>
-          <a href="#" id="contactBtn" class="cta small">Wyślij wiadomość</a>
-        </div>
-      </div>
+      <h1 id="firmName">Twoja firma</h1>
+      <p id="firmBranch" class="branch">Branża</p>
+      <p id="firmLocation" class="location">Lokalizacja</p>
+      <p id="firmAbout">Tutaj pojawi się opis Twojej działalności.</p>
 
-      <div class="profile-about">
-        <h2>O firmie</h2>
-        <p id="firmAbout">
-          Specjalizujemy się w kompleksowych remontach mieszkań i domów.  
-          Oferujemy malowanie, układanie płytek, montaż mebli, prace hydrauliczne i elektryczne.  
-          Zrealizowaliśmy ponad 200 projektów w Warszawie i okolicach.  
-          Gwarantujemy terminowość, estetykę wykonania i 24 miesiące gwarancji.
-        </p>
-      </div>
-
-      <div class="profile-skills">
-        <h2>Specjalizacje</h2>
-        <ul id="firmSkills" class="skills-list">
-          <li>🎨 Malowanie i tapetowanie</li>
-          <li>🧱 Układanie płytek</li>
-          <li>🔌 Instalacje elektryczne</li>
-          <li>🚿 Remonty łazienek</li>
-          <li>🪚 Montaż zabudowy meblowej</li>
-        </ul>
-      </div>
+      <ul id="firmSkills" class="skills-list"></ul>
 
       <div class="profile-actions center">
         <button id="editProfileBtn" class="cta">Edytuj profil</button>
+        <button id="addProjectBtn" class="cta secondary">Dodaj realizację</button>
         <p id="profileLink" class="gold small" style="margin-top:10px;"></p>
+      </div>
+
+      <div id="projectsSection" style="margin-top:40px;">
+        <h2>Twoje realizacje</h2>
+        <div id="projectsGrid" class="projects-grid"></div>
+      </div>
+
+      <!-- 🔹 Sekcja opinii klientów -->
+      <div id="opinieSection" style="margin-top:60px;">
+        <h2>Opinie klientów 💎</h2>
+        <p id="avgRating" class="gold" style="margin-bottom:20px;"></p>
+        <div id="opinieList" class="opinie-list"><p>Ładowanie opinii...</p></div>
+
+        <div id="addOpinionBox" class="add-opinion" style="margin-top:30px;">
+          <h3>Dodaj swoją opinię</h3>
+          <form id="opiniaForm">
+            <label>Twoja ocena:</label>
+            <div id="ratingStars" class="rating-stars"></div>
+            <textarea id="opiniaText" rows="3" placeholder="Napisz swoją opinię..." required></textarea>
+            <button type="submit" class="cta">Dodaj opinię</button>
+          </form>
+          <p id="opiniaMsg" class="gold small" style="display:none; margin-top:10px;">Twoja opinia została dodana 💎</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- MODAL EDKYCJI -->
+  <!-- MODAL: EDKYCJA PROFILU -->
   <div id="editModal" class="modal" style="display:none;">
     <div class="modal-content">
       <h2>Edytuj profil firmy</h2>
       <form id="editForm">
-        <label>Nazwa firmy</label>
-        <input type="text" id="editName">
+        <label>Nazwa firmy</label><input id="editName" required>
+        <label>Branża</label><input id="editBranch">
+        <label>Lokalizacja</label><input id="editLocation">
+        <label>Opis firmy</label><textarea id="editAbout" rows="4"></textarea>
+        <label>Specjalizacje (oddziel przecinkami)</label><input id="editSkills">
+        <label>E-mail kontaktowy</label><input type="email" id="editEmail">
+        <div class="modal-actions">
+          <button type="submit" class="cta">Zapisz</button>
+          <button type="button" id="cancelEdit" class="cta secondary">Anuluj</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-        <label>Branża</label>
-        <input type="text" id="editBranch">
+  <!-- MODAL: DODAWANIE REALIZACJI -->
+  <div id="projectModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h2>Dodaj realizację</h2>
+      <form id="projectForm">
+        <label>Opis realizacji</label>
+        <textarea id="projectOpis" rows="3" placeholder="np. Remont kuchni w Krakowie"></textarea>
 
-        <label>Lokalizacja</label>
-        <input type="text" id="editLocation">
+        <label>Typ realizacji</label>
+        <select id="projectType">
+          <option value="zdjecie">Zdjęcie</option>
+          <option value="film">Film (YouTube)</option>
+        </select>
 
-        <label>Opis firmy</label>
-        <textarea id="editAbout" rows="4"></textarea>
+        <div id="uploadSection">
+          <label>Wybierz plik (zdjęcie)</label>
+          <input type="file" id="projectFile" accept="image/*">
+        </div>
 
-        <label>Specjalizacje (oddziel przecinkami)</label>
-        <input type="text" id="editSkills">
-
-        <label>E-mail kontaktowy</label>
-        <input type="email" id="editEmail">
+        <div id="linkSection" style="display:none;">
+          <label>Link do filmu (YouTube)</label>
+          <input type="url" id="projectLink" placeholder="https://youtube.com/watch?v=...">
+        </div>
 
         <div class="modal-actions">
-          <button type="submit" class="cta">Zapisz zmiany</button>
-          <button type="button" id="cancelEdit" class="cta secondary">Anuluj</button>
+          <button type="submit" class="cta">Dodaj</button>
+          <button type="button" id="cancelProject" class="cta secondary">Anuluj</button>
         </div>
       </form>
     </div>
@@ -111,276 +123,178 @@
 
   <!-- FOOTER -->
   <footer class="lumena-footer">
-    <div class="wrap foot">
-      <div>
-        <h5>Sekcje</h5>
-        <a href="/pages/oferty.html">Oferty</a>
-        <a href="/pages/rejestracja.html">Rejestracja</a>
-        <a href="/pages/login.html">Logowanie</a>
-      </div>
-      <div>
-        <h5>Informacje</h5>
-        <a href="/pages/o-lumena.html">O LUMENA</a>
-        <a href="/pages/polityka.html">Polityka prywatności</a>
-        <a href="/pages/rodo.html">RODO</a>
-        <a href="/pages/bezpieczenstwo.html">Poradnik bezpieczeństwa</a>
-      </div>
-      <div>
-        <h5>Kontakt</h5>
-        <a href="mailto:kontakt.lumena.studio@gmail.com">kontakt.lumena.studio@gmail.com</a>
-        <a href="#">Instagram</a>
-        <a href="#">Pinterest</a>
-      </div>
-    </div>
-
-    <div class="copy">
-      © 2025 <span class="gold">LUMENA Creative</span> 💎  
-      <br><small>Wszystkie prawa zastrzeżone.</small>
-    </div>
+    <div class="copy">© 2025 <span class="gold">LUMENA Creative</span> 💎</div>
   </footer>
 
-  <!-- SKRYPTY PROFILU -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const FIRMS_KEY = "lumena_firms";
-      const PROFILE_KEY = "lumena_firm_profile";
+  <!-- 🔥 FIREBASE SKRYPT -->
+  <script type="module">
+    import { db } from "/js/firebase.js";
+    import { collection, getDocs, query, where, updateDoc, doc, addDoc, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-storage.js";
 
-      const params = new URLSearchParams(window.location.search);
-      const firmId = params.get("id");
+    const userEmail = localStorage.getItem("lumena_user_email");
+    const userType = localStorage.getItem("userType");
+    const storage = getStorage();
+    const opinieList = document.getElementById("opinieList");
+    const opiniaForm = document.getElementById("opiniaForm");
+    const opiniaMsg = document.getElementById("opiniaMsg");
+    const avgRating = document.getElementById("avgRating");
 
-      const firms = JSON.parse(localStorage.getItem(FIRMS_KEY) || "{}");
-      const firmData = JSON.parse(localStorage.getItem(PROFILE_KEY) || "{}");
+    const editBtn = document.getElementById("editProfileBtn");
+    const modal = document.getElementById("editModal");
+    const cancelEdit = document.getElementById("cancelEdit");
+    const projectBtn = document.getElementById("addProjectBtn");
+    const projectModal = document.getElementById("projectModal");
+    const cancelProject = document.getElementById("cancelProject");
+    const projectsGrid = document.getElementById("projectsGrid");
 
-      const editBtn = document.getElementById("editProfileBtn");
-      const modal = document.getElementById("editModal");
-      const cancelBtn = document.getElementById("cancelEdit");
-      const contactBtn = document.getElementById("contactBtn");
+    let firmId = null;
+    let realizacje = [];
+    let currentRating = 0;
 
-      // TRYB PUBLICZNY
-      if (firmId) {
-        const firm = firms[firmId];
-        if (!firm) {
-          document.getElementById("firmName").textContent = "Firma nieznana";
-          document.getElementById("firmAbout").textContent = "Profil został usunięty lub jest niedostępny.";
-          editBtn.style.display = "none";
-          return;
-        }
-        document.getElementById("firmName").textContent = firm.name;
-        document.getElementById("firmBranch").textContent = firm.branch;
-        document.getElementById("firmLocation").textContent = firm.location;
-        document.getElementById("firmAbout").textContent = firm.about;
-        const skillsList = document.getElementById("firmSkills");
-        skillsList.innerHTML = "";
-        firm.skills.forEach(s => {
-          const li = document.createElement("li");
-          li.textContent = s;
-          skillsList.appendChild(li);
-        });
-        if (firm.email) contactBtn.href = `mailto:${firm.email}`;
-        editBtn.style.display = "none";
+    // 🔹 Wczytaj dane firmy
+    async function loadFirm() {
+      if (!userEmail) return;
+      const q = query(collection(db, "firmy"), where("email", "==", userEmail));
+      const snapshot = await getDocs(q);
+      if (snapshot.empty) return;
+
+      const firmDoc = snapshot.docs[0];
+      firmId = firmDoc.id;
+      const data = firmDoc.data();
+
+      document.getElementById("firmName").textContent = data.nazwa || "";
+      document.getElementById("firmBranch").textContent = data.branza || "";
+      document.getElementById("firmLocation").textContent = data.lokalizacja || "";
+      document.getElementById("firmAbout").textContent = data.opis || "";
+
+      const skillsList = document.getElementById("firmSkills");
+      skillsList.innerHTML = "";
+      (data.specjalizacje || []).forEach(s => {
+        const li = document.createElement("li");
+        li.textContent = s;
+        skillsList.appendChild(li);
+      });
+
+      realizacje = data.realizacje || [];
+      renderProjects();
+      loadOpinie();
+    }
+
+    // 🔸 Renderuj realizacje
+    function renderProjects() {
+      projectsGrid.innerHTML = "";
+      if (realizacje.length === 0) {
+        projectsGrid.innerHTML = "<p>Brak dodanych realizacji.</p>";
+        return;
+      }
+      realizacje.forEach((r, i) => {
+        const div = document.createElement("div");
+        div.classList.add("project-card");
+        div.innerHTML = r.typ === "zdjecie"
+          ? `<img src="${r.url}" alt=""><p>${r.opis || ""}</p><button class="delete-btn" data-index="${i}">🗑️ Usuń</button>`
+          : `<iframe src="${r.url.replace("watch?v=", "embed/")}" allowfullscreen></iframe><p>${r.opis || ""}</p><button class="delete-btn" data-index="${i}">🗑️ Usuń</button>`;
+        projectsGrid.appendChild(div);
+      });
+    }
+
+    // 🔸 Opinie
+    async function loadOpinie() {
+      if (!firmId) return;
+      const q = query(collection(db, "opinie"), where("firmaId", "==", firmId), orderBy("createdAt", "desc"));
+      const snapshot = await getDocs(q);
+      opinieList.innerHTML = "";
+
+      if (snapshot.empty) {
+        opinieList.innerHTML = "<p>Brak opinii.</p>";
+        avgRating.textContent = "";
         return;
       }
 
-      // TRYB WŁASNEGO PROFILU
-      if (firmData.name) {
-        document.getElementById("firmName").textContent = firmData.name;
-        document.getElementById("firmBranch").textContent = firmData.branch;
-        document.getElementById("firmLocation").textContent = firmData.location;
-        document.getElementById("firmAbout").textContent = firmData.about;
-        const skillsList = document.getElementById("firmSkills");
-        skillsList.innerHTML = "";
-        firmData.skills.forEach(skill => {
-          const li = document.createElement("li");
-          li.textContent = skill;
-          skillsList.appendChild(li);
-        });
-        if (firmData.email) contactBtn.href = `mailto:${firmData.email}`;
+      let sum = 0;
+      let count = 0;
+      snapshot.forEach(docSnap => {
+        const d = docSnap.data();
+        sum += d.ocena;
+        count++;
+        const div = document.createElement("div");
+        div.classList.add("opinia");
+        const diamenty = "💎".repeat(d.ocena);
+        div.innerHTML = `
+          <p class="rating">${diamenty}</p>
+          <p class="text">${d.tresc}</p>
+          <p class="meta">${d.autor || "Anonim"} — ${d.createdAt?.toDate ? d.createdAt.toDate().toLocaleDateString("pl-PL") : ""}</p>
+        `;
+        opinieList.appendChild(div);
+      });
+      const avg = (sum / count).toFixed(1);
+      avgRating.textContent = `Średnia ocen: ${avg} 💎`;
+    }
 
-        const firmIdGen = firmData.name.toLowerCase().replace(/\s+/g, "-");
-        document.getElementById("profileLink").innerHTML = 
-          `Twój publiczny profil: <a href="/pages/profil-firmy.html?id=${firmIdGen}" class="gold">${window.location.origin}/pages/profil-firmy.html?id=${firmIdGen}</a>`;
+    // 🔹 Dodawanie opinii
+    if (opiniaForm) {
+      const starsDiv = document.getElementById("ratingStars");
+      for (let i = 1; i <= 5; i++) {
+        const span = document.createElement("span");
+        span.textContent = "💎";
+        span.classList.add("star");
+        span.dataset.value = i;
+        span.addEventListener("click", () => {
+          currentRating = i;
+          document.querySelectorAll(".star").forEach(s => s.classList.remove("active"));
+          for (let j = 0; j < i; j++) document.querySelectorAll(".star")[j].classList.add("active");
+        });
+        starsDiv.appendChild(span);
       }
 
-      editBtn.addEventListener("click", () => {
-        modal.style.display = "flex";
-        document.getElementById("editName").value = firmData.name || "";
-        document.getElementById("editBranch").value = firmData.branch || "";
-        document.getElementById("editLocation").value = firmData.location || "";
-        document.getElementById("editAbout").value = firmData.about || "";
-        document.getElementById("editSkills").value = (firmData.skills || []).join(", ");
-        document.getElementById("editEmail").value = firmData.email || "";
-      });
-
-      cancelBtn.addEventListener("click", () => modal.style.display = "none");
-
-      document.getElementById("editForm").addEventListener("submit", e => {
+      opiniaForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const updated = {
-          name: document.getElementById("editName").value.trim(),
-          branch: document.getElementById("editBranch").value.trim(),
-          location: document.getElementById("editLocation").value.trim(),
-          about: document.getElementById("editAbout").value.trim(),
-          email: document.getElementById("editEmail").value.trim(),
-          skills: document.getElementById("editSkills").value.split(",").map(s => s.trim()).filter(Boolean)
-        };
-        localStorage.setItem(PROFILE_KEY, JSON.stringify(updated));
-        const id = updated.name.toLowerCase().replace(/\s+/g, "-");
-        const firms = JSON.parse(localStorage.getItem(FIRMS_KEY) || "{}");
-        firms[id] = updated;
-        localStorage.setItem(FIRMS_KEY, JSON.stringify(firms));
-        alert("Zapisano zmiany ✅");
-        location.reload();
+        if (currentRating === 0) return alert("Wybierz ocenę 💎");
+        const tresc = opiniaText.value.trim();
+        if (!tresc) return;
+
+        await addDoc(collection(db, "opinie"), {
+          firmaId,
+          autor: userEmail,
+          tresc,
+          ocena: currentRating,
+          createdAt: serverTimestamp()
+        });
+
+        opiniaForm.reset();
+        currentRating = 0;
+        document.querySelectorAll(".star").forEach(s => s.classList.remove("active"));
+        opiniaMsg.style.display = "block";
+        setTimeout(() => (opiniaMsg.style.display = "none"), 2500);
+        loadOpinie();
       });
+    }
 
-      document.getElementById("logoutBtn").addEventListener("click", () => {
-        if (confirm("Czy na pewno chcesz się wylogować?")) {
-          localStorage.removeItem("lumena_user_token");
-          window.location.href = "/pages/login.html";
-        }
-      });
-    });
-  </script>
-
-  <!-- BANER COOKIES -->
-  <div id="cookie-banner" class="cookie-banner" style="display:none;">
-    <div class="cookie-content">
-      <p>
-        🍪 Ta strona korzysta z plików cookie, aby zapewnić Ci najlepsze doświadczenie,  
-        analizować ruch oraz wyświetlać dopasowane reklamy Google.  
-        Więcej informacji znajdziesz w naszej  
-        <a href="/pages/cookies.html" target="_blank">Polityce plików cookies</a>.
-      </p>
-      <div class="cookie-actions">
-        <button id="acceptCookies" class="cta">Akceptuję</button>
-        <button id="declineCookies" class="cta secondary">Odrzuć</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const banner = document.getElementById("cookie-banner");
-    const accepted = localStorage.getItem("lumena_cookies_accepted");
-
-    if (!accepted) banner.style.display = "flex";
-
-    document.getElementById("acceptCookies").addEventListener("click", () => {
-      localStorage.setItem("lumena_cookies_accepted", "true");
-      banner.style.display = "none";
+    // 🚪 Wylogowanie
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.clear();
+      window.location.href = "/pages/login.html";
     });
 
-    document.getElementById("declineCookies").addEventListener("click", () => {
-      localStorage.setItem("lumena_cookies_accepted", "false");
-      banner.style.display = "none";
-    });
-  });
+    loadFirm();
   </script>
 
   <style>
-  .modal {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-  }
-  .modal-content {
-    background: #1a1a1a;
-    border-radius: 14px;
-    padding: 30px;
-    max-width: 500px;
-    width: 90%;
-    color: white;
-  }
-  .modal-content label {
-    display: block;
-    margin-top: 12px;
-    color: var(--gold);
-  }
-  .modal-content input,
-  .modal-content textarea {
-    width: 100%;
-    background: #111;
-    color: white;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 8px;
-    padding: 10px;
-    margin-top: 6px;
-  }
-  .modal-actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  .gold.small a {
-    color: var(--gold);
-    text-decoration: underline;
-  }
+    .projects-grid { margin-top:20px; display:grid; gap:20px; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); }
+    .project-card { background:#111; border-radius:10px; padding:10px; text-align:center; position:relative; }
+    .project-card img { width:100%; border-radius:8px; }
+    .project-card iframe { width:100%; height:180px; border-radius:8px; }
+    .delete-btn { margin-top:8px; background:transparent; border:1px solid #ff4d4d; color:#ff4d4d; padding:6px 12px; border-radius:8px; cursor:pointer; }
+    .delete-btn:hover { background:#ff4d4d; color:#000; }
 
-  /* BANER COOKIES */
-  .cookie-banner {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(15, 15, 15, 0.95);
-    border-top: 1px solid rgba(255,255,255,0.1);
-    color: #fff;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    font-family: 'Inter', sans-serif;
-    animation: fadeIn 0.6s ease-in-out;
-  }
-
-  .cookie-content {
-    max-width: 900px;
-    text-align: center;
-  }
-
-  .cookie-content p {
-    font-size: 14px;
-    line-height: 1.5;
-    margin-bottom: 10px;
-  }
-
-  .cookie-content a {
-    color: var(--gold);
-    text-decoration: underline;
-  }
-
-  .cookie-actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .cookie-actions .cta {
-    background: var(--gold);
-    color: #000;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-  }
-
-  .cookie-actions .cta.secondary {
-    background: transparent;
-    border: 1px solid var(--gold);
-    color: var(--gold);
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    .opinie-list { margin-top:20px; display:grid; gap:15px; }
+    .opinia { background:#111; border-radius:10px; padding:15px; border:1px solid rgba(255,255,255,0.1); }
+    .opinia .rating { color:var(--gold); font-size:20px; }
+    .opinia .meta { color:#aaa; font-size:13px; margin-top:5px; }
+    .rating-stars { font-size:28px; cursor:pointer; user-select:none; }
+    .rating-stars .star { opacity:0.5; transition:0.2s; }
+    .rating-stars .star.active, .rating-stars .star:hover { opacity:1; transform:scale(1.2); }
+    .add-opinion textarea { width:100%; margin-top:10px; background:#111; color:#fff; border:1px solid rgba(255,255,255,0.2); border-radius:8px; padding:10px; }
   </style>
 </body>
 </html>

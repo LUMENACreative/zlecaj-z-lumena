@@ -5,22 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Panel Wykonawcy — ZLECAJ z LUMENA</title>
 
-  <!-- SEO -->
-  <meta name="description" content="Twój panel firmowy — przeglądaj zlecenia, filtruj po lokalizacji i kategorii, składaj oferty bez prowizji. ZLECAJ z LUMENA.">
+  <meta name="description" content="Panel wykonawcy — zarządzaj swoim profilem, opiniami i statystykami.">
   <meta name="author" content="LUMENA Creative" />
-  <link rel="canonical" href="https://zlecajzlumena.pl/pages/panel-firma.html" />
-
-  <!-- Favicon -->
   <link rel="icon" href="/image/favicon.png" type="image/png">
   <meta name="theme-color" content="#0b0b0f" />
 
-  <!-- Fonts & CSS -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 
 <body>
-  <!-- HEADER — PANEL WYKONAWCY -->
+  <!-- HEADER -->
   <header class="topbar panel-header">
     <div class="wrap flex between center-v">
       <div class="logo-area flex center-v">
@@ -31,256 +26,245 @@
       </div>
 
       <nav class="panel-nav flex center-v">
-        <a href="/pages/zlecenia.html" class="cta">Przeglądaj zlecenia</a>
         <button id="logoutBtn" class="cta secondary">Wyloguj się</button>
       </nav>
     </div>
   </header>
 
-  <!-- PANEL FIRMY -->
-  <section class="panel">
+  <!-- PANEL -->
+  <main class="panel">
     <div class="wrap">
-      <h1>Witaj w panelu firmy 💎</h1>
-      <p class="subtitle">Przeglądaj aktualne zlecenia i składaj oferty.</p>
+      <h1 class="center" style="color:var(--gold)">Witaj w panelu wykonawcy 💎</h1>
+      <p class="subtitle center">Zarządzaj profilem, opiniami i statystykami.</p>
 
-      <!-- PROFIL FIRMY -->
-      <div class="profile-card">
-        <div class="profile-header">
-          <div class="avatar">🏗️</div>
-          <div>
-            <h2>Golden Build Sp. z o.o.</h2>
-            <p class="branch">Remonty i wykończenia wnętrz</p>
-            <p class="location">Warszawa, mazowieckie</p>
-          </div>
-        </div>
-        <p class="bio">
-          Specjalizujemy się w kompleksowych remontach mieszkań i domów.  
-          Oferujemy malowanie, układanie płytek, tapetowanie i montaż zabudowy meblowej.  
-          Zaufało nam już ponad 200 klientów.
-        </p>
+      <!-- Nawigacja -->
+      <div class="admin-tabs-nav center" style="margin-bottom:24px;">
+        <button class="tab-btn cta secondary active" data-tab="profilTab">💼 Profil firmy</button>
+        <button class="tab-btn cta secondary" data-tab="opinieTab">💎 Opinie klientów</button>
+        <button class="tab-btn cta secondary" data-tab="statystykiTab">📊 Statystyki</button>
       </div>
 
-      <!-- FILTRY -->
-      <h2 class="section-title">Filtruj zlecenia</h2>
-      <form id="filterForm" class="filters">
-        <div class="filter-group">
-          <label for="filterCity">Miasto</label>
-          <input type="text" id="filterCity" placeholder="np. Warszawa">
-        </div>
-        <div class="filter-group">
-          <label for="filterCategory">Kategoria</label>
-          <select id="filterCategory">
-            <option value="">Wszystkie</option>
-            <option value="Remonty">Remonty</option>
-            <option value="Malowanie">Malowanie</option>
-            <option value="Kuchnie">Kuchnie</option>
-            <option value="Łazienki">Łazienki</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label for="filterSort">Sortuj</label>
-          <select id="filterSort">
-            <option value="najnowsze">Najnowsze</option>
-            <option value="alfabetycznie">Alfabetycznie</option>
-          </select>
-        </div>
-        <button type="submit" class="cta small">Filtruj</button>
-      </form>
+      <!-- Zawartość -->
+      <div class="admin-tabs">
 
-      <!-- LISTA DOSTĘPNYCH ZLECEŃ -->
-      <h2 class="section-title">Dostępne zlecenia</h2>
-      <div id="ordersList" class="orders"></div>
+        <!-- PROFIL -->
+        <div id="profilTab" class="tab-pane active">
+          <div class="admin-card">
+            <h2>Edytuj dane firmy</h2>
+            <form id="editFirmForm" class="zlecenie-form">
+              <div class="form-group grid-2">
+                <div>
+                  <label for="nazwa">Nazwa firmy</label>
+                  <input type="text" id="nazwa" required />
+                </div>
+                <div>
+                  <label for="email">E-mail</label>
+                  <input type="email" id="email" disabled />
+                </div>
+              </div>
+
+              <div class="form-group grid-2">
+                <div>
+                  <label for="telefon">Telefon</label>
+                  <input type="text" id="telefon" />
+                </div>
+                <div>
+                  <label for="miasto">Miasto</label>
+                  <input type="text" id="miasto" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="branza">Branża</label>
+                <input type="text" id="branza" />
+              </div>
+
+              <div class="form-group">
+                <label for="opis">Opis</label>
+                <textarea id="opis" rows="4"></textarea>
+              </div>
+
+              <button type="submit" class="cta">💾 Zapisz zmiany</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- OPINIE -->
+        <div id="opinieTab" class="tab-pane">
+          <div class="admin-card">
+            <h2>Opinie klientów</h2>
+            <p id="avgRating" style="margin-bottom:15px;color:var(--gold);"></p>
+            <div id="opinieList" class="admin-list">
+              <p>Ładowanie opinii...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- STATYSTYKI -->
+        <div id="statystykiTab" class="tab-pane">
+          <div class="admin-card">
+            <h2>Twoje statystyki</h2>
+            <div class="grid-3">
+              <div class="card-stats">
+                <div class="icon">💎</div>
+                <h3 id="statOpinie">0</h3>
+                <p>Łączna liczba opinii</p>
+              </div>
+              <div class="card-stats">
+                <div class="icon">⭐</div>
+                <h3 id="statSrednia">0.0</h3>
+                <p>Średnia ocena</p>
+              </div>
+              <div class="card-stats">
+                <div class="icon">📅</div>
+                <h3 id="statData">-</h3>
+                <p>Data rejestracji</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
-  </section>
+  </main>
 
   <!-- FOOTER -->
   <footer class="lumena-footer">
-    <div class="wrap foot">
-      <div>
-        <h5>Sekcje</h5>
-        <a href="/pages/oferty.html">Zlecenia</a>
-        <a href="/pages/rejestracja.html">Rejestracja</a>
-        <a href="/pages/login.html">Logowanie</a>
-      </div>
-      <div>
-        <h5>Informacje</h5>
-        <a href="/pages/o-lumena.html">O LUMENA</a>
-        <a href="/pages/polityka.html">Polityka prywatności</a>
-        <a href="/pages/rodo.html">RODO</a>
-        <a href="/pages/bezpieczenstwo.html">Poradnik bezpieczeństwa</a>
-      </div>
-      <div>
-        <h5>Kontakt</h5>
-        <a href="mailto:kontakt.lumena.studio@gmail.com">kontakt.lumena.studio@gmail.com</a>
-        <a href="#">Instagram</a>
-        <a href="#">Pinterest</a>
-      </div>
-    </div>
-
     <div class="copy">
       © 2025 <span class="gold">LUMENA Creative</span> 💎  
       <br><small>Wszystkie prawa zastrzeżone.</small>
     </div>
   </footer>
 
-  <!-- SKRYPT -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const ordersList = document.getElementById("ordersList");
-      const allOrders = JSON.parse(localStorage.getItem("lumena_orders") || "[]");
+  <!-- 🔥 LOGIKA -->
+  <script type="module">
+    import { db } from "/js/firebase.js";
+    import {
+      collection, getDocs, doc, getDoc, updateDoc, query, where, orderBy, setDoc, addDoc, Timestamp
+    } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-      const renderOrders = (orders) => {
-        ordersList.innerHTML = "";
-        if (!orders.length) {
-          ordersList.innerHTML = "<p>Brak zleceń spełniających kryteria wyszukiwania 💎</p>";
-          return;
-        }
+    const loggedIn = localStorage.getItem("loggedIn");
+    const userType = localStorage.getItem("userType");
+    const userEmail = localStorage.getItem("userEmail");
 
-        orders.forEach(o => {
-          const div = document.createElement("div");
-          div.classList.add("order-card");
-          div.innerHTML = `
-            <h3>${o.tytul}</h3>
-            <p class="meta">${o.miasto} • ${o.kategoria} • dodano: ${o.data}</p>
-            <p class="desc">${o.opis}</p>
-            <div class="order-actions">
-              <a href="/pages/szczegoly-zlecenia.html?id=${o.id}" class="cta secondary">Zobacz szczegóły</a>
-              <a href="/pages/szczegoly-zlecenia.html?id=${o.id}#zloz-oferte" class="cta">Złóż ofertę</a>
-            </div>
-          `;
-          ordersList.appendChild(div);
-        });
-      };
-
-      renderOrders(allOrders.slice().reverse());
-
-      document.getElementById("filterForm").addEventListener("submit", e => {
-        e.preventDefault();
-        const city = document.getElementById("filterCity").value.trim().toLowerCase();
-        const cat = document.getElementById("filterCategory").value;
-        const sort = document.getElementById("filterSort").value;
-
-        let filtered = allOrders.filter(o => {
-          const matchCity = !city || o.miasto.toLowerCase().includes(city);
-          const matchCat = !cat || o.kategoria === cat;
-          return matchCity && matchCat;
-        });
-
-        if (sort === "alfabetycznie") {
-          filtered.sort((a, b) => a.tytul.localeCompare(b.tytul, "pl"));
-        } else {
-          filtered.sort((a, b) => new Date(b.data) - new Date(a.data));
-        }
-
-        renderOrders(filtered);
-      });
-
-      document.getElementById("logoutBtn").addEventListener("click", () => {
-        if (confirm("Czy na pewno chcesz się wylogować?")) {
-          localStorage.removeItem("lumena_user_token");
-          window.location.href = "/pages/login.html";
-        }
-      });
-    });
-  </script>
-
-  <!-- BANER COOKIES -->
-  <div id="cookie-banner" class="cookie-banner" style="display:none;">
-    <div class="cookie-content">
-      <p>
-        🍪 Ta strona korzysta z plików cookie, aby zapewnić Ci najlepsze doświadczenie,  
-        analizować ruch oraz wyświetlać dopasowane reklamy Google.  
-        Więcej informacji znajdziesz w naszej  
-        <a href="/pages/cookies.html" target="_blank">Polityce plików cookies</a>.
-      </p>
-      <div class="cookie-actions">
-        <button id="acceptCookies" class="cta">Akceptuję</button>
-        <button id="declineCookies" class="cta secondary">Odrzuć</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const banner = document.getElementById("cookie-banner");
-    const accepted = localStorage.getItem("lumena_cookies_accepted");
-
-    if (!accepted) {
-      banner.style.display = "flex";
+    if (!loggedIn || userType !== "company") {
+      alert("Dostęp tylko dla zalogowanych wykonawców 💼");
+      window.location.href = "/pages/login.html";
     }
 
-    document.getElementById("acceptCookies").addEventListener("click", () => {
-      localStorage.setItem("lumena_cookies_accepted", "true");
-      banner.style.display = "none";
+    const logoutBtn = document.getElementById("logoutBtn");
+    logoutBtn.addEventListener("click", () => {
+      if (confirm("Czy chcesz się wylogować?")) {
+        localStorage.clear();
+        window.location.href = "/pages/login.html";
+      }
     });
 
-    document.getElementById("declineCookies").addEventListener("click", () => {
-      localStorage.setItem("lumena_cookies_accepted", "false");
-      banner.style.display = "none";
+    // ====== Taby ======
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const tabPanes = document.querySelectorAll(".tab-pane");
+    tabButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        tabButtons.forEach(b => b.classList.remove("active"));
+        tabPanes.forEach(p => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.tab).classList.add("active");
+      });
     });
-  });
+
+    // ====== Profil ======
+    const form = document.getElementById("editFirmForm");
+    async function loadFirmData() {
+      const q = query(collection(db, "firmy"), where("email", "==", userEmail));
+      const snap = await getDocs(q);
+      if (!snap.empty) {
+        const docRef = snap.docs[0];
+        const data = docRef.data();
+        form.dataset.id = docRef.id;
+        document.getElementById("nazwa").value = data.nazwa || "";
+        document.getElementById("email").value = data.email || "";
+        document.getElementById("telefon").value = data.telefon || "";
+        document.getElementById("miasto").value = data.miasto || "";
+        document.getElementById("branza").value = data.branza || "";
+        document.getElementById("opis").value = data.opis || "";
+        document.getElementById("statData").textContent = data.dataRejestracji
+          ? new Date(data.dataRejestracji).toLocaleDateString("pl-PL")
+          : "-";
+      }
+    }
+
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const id = form.dataset.id;
+      if (!id) return alert("Błąd: nie znaleziono ID firmy.");
+      const ref = doc(db, "firmy", id);
+      await updateDoc(ref, {
+        nazwa: document.getElementById("nazwa").value,
+        telefon: document.getElementById("telefon").value,
+        miasto: document.getElementById("miasto").value,
+        branza: document.getElementById("branza").value,
+        opis: document.getElementById("opis").value,
+      });
+      alert("✅ Dane firmy zostały zaktualizowane!");
+    });
+
+    // ====== Opinie ======
+    async function loadOpinie() {
+      const list = document.getElementById("opinieList");
+      const avg = document.getElementById("avgRating");
+
+      // Sprawdź, czy kolekcja istnieje (utworzy się automatycznie)
+      const q = query(collection(db, "opinie"), where("firmEmail", "==", userEmail), orderBy("createdAt", "desc"));
+      const snap = await getDocs(q);
+
+      if (snap.empty) {
+        list.innerHTML = "<p>Brak opinii dla Twojej firmy 💎</p>";
+        avg.textContent = "";
+        document.getElementById("statOpinie").textContent = "0";
+        document.getElementById("statSrednia").textContent = "0.0";
+        return;
+      }
+
+      let total = 0;
+      const container = document.createElement("div");
+      container.classList.add("admin-grid");
+
+      snap.forEach(docSnap => {
+        const o = docSnap.data();
+        total += o.ocena || 0;
+        const dateStr = o.createdAt?.toDate ? o.createdAt.toDate().toLocaleDateString("pl-PL") : "";
+        let diamonds = "";
+        for (let i = 1; i <= 5; i++) diamonds += i <= o.ocena ? "💎" : "◇";
+
+        const div = document.createElement("div");
+        div.classList.add("admin-card-row");
+        div.innerHTML = `
+          <div class="row-main">
+            <div class="row-head"><strong class="gold">${o.autorEmail || "Anonim"}</strong> <span class="diamonds">${diamonds}</span></div>
+            <div class="row-meta"><span class="muted">${dateStr}</span></div>
+            <p class="row-desc">${o.tresc || ""}</p>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+
+      const avgScore = (total / snap.size).toFixed(1);
+      avg.textContent = `Średnia ocen: ${avgScore} / 5 💎`;
+      document.getElementById("statOpinie").textContent = snap.size;
+      document.getElementById("statSrednia").textContent = avgScore;
+
+      list.innerHTML = "";
+      list.appendChild(container);
+    }
+
+    loadFirmData();
+    loadOpinie();
   </script>
 
   <style>
-  .cookie-banner {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(15, 15, 15, 0.95);
-    border-top: 1px solid rgba(255,255,255,0.1);
-    color: #fff;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    font-family: 'Inter', sans-serif;
-    animation: fadeIn 0.6s ease-in-out;
-  }
-
-  .cookie-content {
-    max-width: 900px;
-    text-align: center;
-  }
-
-  .cookie-content p {
-    font-size: 14px;
-    line-height: 1.5;
-    margin-bottom: 10px;
-  }
-
-  .cookie-content a {
-    color: var(--gold);
-    text-decoration: underline;
-  }
-
-  .cookie-actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .cookie-actions .cta {
-    background: var(--gold);
-    color: #000;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-  }
-
-  .cookie-actions .cta.secondary {
-    background: transparent;
-    border: 1px solid var(--gold);
-    color: var(--gold);
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    .tab-btn.active { background: var(--gold); color: var(--black); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
   </style>
 </body>
 </html>

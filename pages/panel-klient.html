@@ -40,15 +40,68 @@
   <!-- PANEL KLIENTA -->
   <section class="panel">
     <div class="wrap">
-      <h1>Witaj ponownie 💎</h1>
-      <p class="subtitle">Zarządzaj swoimi zleceniami i sprawdzaj oferty firm.</p>
+      <h1 id="welcomeText">Witaj 💎</h1>
+      <p class="subtitle">Zarządzaj swoimi zleceniami, opiniami i profilem.</p>
 
+      <!-- Akcje szybkie -->
       <div class="panel-actions center">
         <a href="/pages/dodaj-zlecenie.html" class="cta">+ Dodaj nowe zlecenie</a>
       </div>
 
-      <h2 class="section-title">Twoje zlecenia</h2>
-      <div id="ordersList" class="orders"></div>
+      <!-- Nawigacja zakładek -->
+      <div class="admin-tabs-nav center" style="margin:24px 0;">
+        <button class="tab-btn cta secondary active" data-tab="zleceniaTab">🧾 Moje zlecenia</button>
+        <button class="tab-btn cta secondary" data-tab="opinieTab">💎 Moje opinie</button>
+        <button class="tab-btn cta secondary" data-tab="statystykiTab">📊 Statystyki</button>
+      </div>
+
+      <!-- Zawartość zakładek -->
+      <div class="admin-tabs">
+
+        <!-- 🧾 MOJE ZLECENIA -->
+        <div id="zleceniaTab" class="tab-pane active fade">
+          <h2 class="section-title">Twoje zlecenia</h2>
+          <div id="ordersList" class="orders">
+            <p>Ładowanie Twoich zleceń...</p>
+          </div>
+        </div>
+
+        <!-- 💎 MOJE OPINIE -->
+        <div id="opinieTab" class="tab-pane fade">
+          <div class="admin-card">
+            <h2>Twoje opinie o firmach</h2>
+            <p class="muted" style="margin-bottom:12px">Opinie są posortowane od najnowszych.</p>
+            <div id="opinieListUser" class="admin-list">
+              <p>Ładowanie Twoich opinii...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 📊 STATYSTYKI -->
+        <div id="statystykiTab" class="tab-pane fade">
+          <div class="admin-card">
+            <h2>Statystyki konta</h2>
+            <div class="grid-3">
+              <div class="card-stats">
+                <div class="icon">🧾</div>
+                <h3 id="statZlecenia">0</h3>
+                <p>Dodane zlecenia</p>
+              </div>
+              <div class="card-stats">
+                <div class="icon">💎</div>
+                <h3 id="statOpinie">0</h3>
+                <p>Wystawione opinie</p>
+              </div>
+              <div class="card-stats">
+                <div class="icon">📅</div>
+                <h3 id="statData">-</h3>
+                <p>Data rejestracji</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /admin-tabs -->
     </div>
   </section>
 
@@ -75,67 +128,293 @@
         <a href="#">Pinterest</a>
       </div>
     </div>
-
     <div class="copy">
       © 2025 <span class="gold">LUMENA Creative</span> 💎  
       <br><small>Wszystkie prawa zastrzeżone.</small>
     </div>
   </footer>
 
-  <!-- SKRYPT PANELU -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const ordersList = document.getElementById("ordersList");
-      const userToken = localStorage.getItem("lumena_user_token");
-      const allOrders = JSON.parse(localStorage.getItem("lumena_orders") || "[]");
+  <!-- 🔥 FIREBASE PANEL KLIENTA -->
+  <script type="module">
+    import { db } from "/js/firebase.js";
+    import {
+      collection, query, where, getDocs, doc, deleteDoc,
+      orderBy, updateDoc, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-      // filtruj tylko zlecenia zalogowanego użytkownika
-      const userOrders = allOrders.filter(o => o.autorToken === userToken);
+    const ordersList = document.getElementById("ordersList");
+    const welcomeText = document.getElementById("welcomeText");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-      if (userOrders.length === 0) {
-        ordersList.innerHTML = "<p>Nie masz jeszcze żadnych zleceń. Dodaj pierwsze 💎</p>";
-        return;
-      }
+    // 🔐 Weryfikacja dostępu (akceptujemy Twój stary token lub nowe flagi)
+    const token = localStorage.getItem("lumena_user_token");
+    const loggedIn = localStorage.getItem("loggedIn");
+    const userType = localStorage.getItem("userType");
+    const userEmail = localStorage.getItem("userEmail");
 
-      userOrders.slice().reverse().forEach(o => {
-        const div = document.createElement("div");
-        div.classList.add("order-card");
-        div.innerHTML = `
-          <h3>${o.tytul}</h3>
-          <p class="meta">${o.miasto} • dodano: ${o.data}</p>
-          <p class="desc">${o.opis}</p>
-          <div class="order-actions">
-            <a href="/pages/szczegoly-zlecenia.html?id=${o.id}" class="cta secondary">Zobacz szczegóły</a>
-            <button class="cta delete-btn" data-id="${o.id}">Usuń</button>
-          </div>
-        `;
-        ordersList.appendChild(div);
+    if ((!token && !loggedIn) || userType !== "client") {
+      alert("Dostęp tylko dla zalogowanych klientów 💎");
+      window.location.href = "/pages/login.html";
+    }
+
+    // Powitanie
+    welcomeText.textContent = `Witaj ${userEmail || "kliencie"} 💎`;
+
+    // ===== Tabs
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const tabPanes   = document.querySelectorAll(".tab-pane");
+    tabButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        tabButtons.forEach(b => b.classList.remove("active"));
+        tabPanes.forEach(p => p.classList.remove("active"));
+        btn.classList.add("active");
+        const pane = document.getElementById(btn.dataset.tab);
+        pane.classList.add("active");
+        // animacja fade-in
+        setTimeout(() => pane.classList.add("visible"), 50);
       });
+    });
 
-      // obsługa usuwania
-      ordersList.addEventListener("click", e => {
-        if (e.target.classList.contains("delete-btn")) {
-          const id = e.target.dataset.id;
-          if (confirm("Czy na pewno chcesz usunąć to zlecenie?")) {
-            const updated = allOrders.filter(o => o.id !== id);
-            localStorage.setItem("lumena_orders", JSON.stringify(updated));
-            alert("Zlecenie zostało usunięte 🗑️");
-            location.reload();
+    // 🚪 Wylogowanie
+    logoutBtn.addEventListener("click", () => {
+      if (confirm("Czy chcesz się wylogować?")) {
+        localStorage.clear();
+        window.location.href = "/pages/login.html";
+      }
+    });
+
+    // 🧾 Pobieranie zleceń przypisanych do użytkownika (od najnowszych)
+    async function loadUserOrders() {
+      try {
+        const qRef = query(
+          collection(db, "zlecenia"),
+          where("autorEmail", "==", userEmail),
+          orderBy("createdAt", "desc")
+        );
+
+        const snapshot = await getDocs(qRef);
+        ordersList.innerHTML = "";
+
+        if (snapshot.empty) {
+          ordersList.innerHTML = "<p>Nie masz jeszcze żadnych zleceń. Dodaj pierwsze 💎</p>";
+          document.getElementById("statZlecenia").textContent = "0";
+          return;
+        }
+
+        let count = 0;
+        snapshot.forEach((docSnap) => {
+          count++;
+          const z = docSnap.data();
+          const div = document.createElement("div");
+          div.classList.add("order-card");
+          const dateStr = z.createdAt?.toDate ? z.createdAt.toDate().toLocaleDateString("pl-PL") : "";
+          div.innerHTML = `
+            <h3>${z.tytul || "Bez tytułu"}</h3>
+            <p class="meta">${z.miasto || "Brak lokalizacji"} • ${dateStr}</p>
+            <p class="desc">${z.opis || ""}</p>
+            <div class="order-actions">
+              <a href="/pages/szczegoly-zlecenia.html?id=${docSnap.id}" class="cta secondary">Zobacz szczegóły</a>
+              <button class="cta delete-btn" data-id="${docSnap.id}">Usuń</button>
+            </div>
+          `;
+          ordersList.appendChild(div);
+        });
+        document.getElementById("statZlecenia").textContent = String(count);
+      } catch (err) {
+        console.error("Błąd pobierania zleceń:", err);
+        ordersList.innerHTML = "<p>❌ Wystąpił błąd przy pobieraniu Twoich zleceń.</p>";
+      }
+    }
+
+    // 🗑️ Usuwanie zlecenia
+    ordersList.addEventListener("click", async (e) => {
+      if (e.target.classList.contains("delete-btn")) {
+        const id = e.target.dataset.id;
+        if (confirm("Czy na pewno chcesz usunąć to zlecenie?")) {
+          await deleteDoc(doc(db, "zlecenia", id));
+          alert("Zlecenie zostało usunięte 🗑️");
+          loadUserOrders();
+        }
+      }
+    });
+
+    // 💎 Moje opinie (od najnowszych) — edycja i usuwanie
+    const opinieListUser = document.getElementById("opinieListUser");
+
+    async function loadUserOpinions() {
+      try {
+        const qRef = query(
+          collection(db, "opinie"),
+          where("autorEmail", "==", userEmail),
+          orderBy("createdAt", "desc")
+        );
+        const snap = await getDocs(qRef);
+
+        opinieListUser.innerHTML = "";
+
+        if (snap.empty) {
+          opinieListUser.innerHTML = "<p>Nie masz jeszcze żadnych opinii. Napisz pierwszą po skorzystaniu z usługi 💎</p>";
+          document.getElementById("statOpinie").textContent = "0";
+          return;
+        }
+
+        let count = 0;
+        const container = document.createElement("div");
+        container.classList.add("admin-grid");
+
+        for (const d of snap.docs) {
+          count++;
+          const o = d.data();
+          const id = d.id;
+          const dateStr = o.createdAt?.toDate ? o.createdAt.toDate().toLocaleDateString("pl-PL") : "";
+          const ocena = o.ocena || 0;
+          let diamonds = "";
+          for (let i = 1; i <= 5; i++) diamonds += i <= ocena ? "💎" : "◇";
+
+          const card = document.createElement("div");
+          card.classList.add("admin-card-row");
+          card.innerHTML = `
+            <div class="row-main">
+              <div class="row-head">
+                <strong class="gold">${o.firmName || o.firmEmail || "Firma"}</strong>
+                <span class="diamonds">${diamonds}</span>
+              </div>
+              <div class="row-meta">
+                <span class="muted">${dateStr}</span>
+                ${o.firmEmail ? `<span class="muted">${o.firmEmail}</span>` : ""}
+              </div>
+              <p class="row-desc">${o.tresc || ""}</p>
+            </div>
+            <div class="row-actions">
+              <button class="cta small secondary edit-opinia" data-id="${id}" data-ocena="${ocena}" data-tresc="${encodeURIComponent(o.tresc || "")}">Edytuj</button>
+              <button class="cta small secondary delete-opinia" data-id="${id}">Usuń</button>
+            </div>
+          `;
+          container.appendChild(card);
+        }
+
+        opinieListUser.appendChild(container);
+        document.getElementById("statOpinie").textContent = String(count);
+      } catch (err) {
+        console.error("Błąd pobierania opinii:", err);
+        opinieListUser.innerHTML = "<p>❌ Wystąpił błąd podczas pobierania Twoich opinii.</p>";
+      }
+    }
+
+    // Edycja/Usuwanie opinii — obsługa kliknięć (delegacja)
+    opinieListUser.addEventListener("click", async (e) => {
+      const target = e.target;
+
+      // Usuń opinię
+      if (target.classList.contains("delete-opinia")) {
+        const id = target.dataset.id;
+        if (!id) return;
+        if (confirm("Usunąć tę opinię? Tej operacji nie można cofnąć.")) {
+          try {
+            await deleteDoc(doc(db, "opinie", id));
+            loadUserOpinions();
+          } catch (err) {
+            console.error("Błąd usuwania opinii:", err);
+            alert("Nie udało się usunąć opinii.");
           }
         }
+      }
+
+      // Edytuj opinię
+      if (target.classList.contains("edit-opinia")) {
+        const id = target.dataset.id;
+        const currentOcena = Number(target.dataset.ocena || 0);
+        const currentTresc = decodeURIComponent(target.dataset.tresc || "");
+
+        openEditOpinionModal(id, currentOcena, currentTresc);
+      }
+    });
+
+    // 📊 Statystyki — data rejestracji z kolekcji "uzytkownicy"
+    async function loadStatsDate() {
+      try {
+        // Szukamy po e-mailu (zgodnie z Twoją rejestracją klienta)
+        const qRef = query(collection(db, "uzytkownicy"), where("email", "==", userEmail));
+        const snap = await getDocs(qRef);
+        if (!snap.empty) {
+          const data = snap.docs[0].data();
+          const dateStr = data.dataRejestracji
+            ? new Date(data.dataRejestracji).toLocaleDateString("pl-PL")
+            : "-";
+          document.getElementById("statData").textContent = dateStr;
+        } else {
+          document.getElementById("statData").textContent = "-";
+        }
+      } catch (err) {
+        console.warn("Nie udało się pobrać daty rejestracji:", err);
+      }
+    }
+
+    // ===== Modal edycji opinii (prosty, bez zewnętrznych CSS)
+    function openEditOpinionModal(id, ocena, tresc) {
+      const modal = document.createElement("div");
+      modal.className = "opinion-modal";
+      modal.innerHTML = `
+        <div class="opinion-modal-content">
+          <h3>Edytuj opinię</h3>
+          <div class="rating-row" id="ratingRow">
+            ${[1,2,3,4,5].map(i => `<span class="diamond ${i<=ocena?"active":""}" data-val="${i}">💎</span>`).join("")}
+          </div>
+          <textarea id="opinionText" rows="4" placeholder="Treść opinii...">${tresc || ""}</textarea>
+          <div class="modal-actions">
+            <button class="cta secondary" id="cancelEdit">Anuluj</button>
+            <button class="cta" id="saveEdit">Zapisz</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      let chosen = ocena || 0;
+      modal.querySelectorAll(".diamond").forEach(d => {
+        d.addEventListener("click", () => {
+          chosen = Number(d.dataset.val);
+          modal.querySelectorAll(".diamond").forEach(x => x.classList.remove("active"));
+          for (let i=0; i<chosen; i++) modal.querySelectorAll(".diamond")[i].classList.add("active");
+        });
       });
 
-      // wylogowanie
-      document.getElementById("logoutBtn").addEventListener("click", () => {
-        if (confirm("Czy na pewno chcesz się wylogować?")) {
-          localStorage.removeItem("lumena_user_token");
-          window.location.href = "/pages/login.html";
+      modal.querySelector("#cancelEdit").addEventListener("click", () => {
+        modal.remove();
+      });
+
+      modal.querySelector("#saveEdit").addEventListener("click", async () => {
+        const newText = modal.querySelector("#opinionText").value.trim();
+        if (!chosen || !newText) {
+          alert("Uzupełnij ocenę i treść opinii.");
+          return;
+        }
+        try {
+          await updateDoc(doc(db, "opinie", id), {
+            ocena: chosen,
+            tresc: newText,
+            updatedAt: serverTimestamp()
+          });
+          modal.remove();
+          loadUserOpinions();
+        } catch (err) {
+          console.error("Błąd aktualizacji opinii:", err);
+          alert("Nie udało się zaktualizować opinii.");
         }
       });
+    }
+
+    // ===== Init
+    loadUserOrders();
+    loadUserOpinions();
+    loadStatsDate();
+
+    // Fade-in inicjalizacja
+    document.querySelectorAll('.fade').forEach(el => {
+      el.classList.add('visible');
     });
   </script>
 
-  <!-- BANER COOKIES -->
+  <!-- COOKIE BANNER -->
   <div id="cookie-banner" class="cookie-banner" style="display:none;">
     <div class="cookie-content">
       <p>
@@ -155,16 +434,11 @@
   document.addEventListener("DOMContentLoaded", () => {
     const banner = document.getElementById("cookie-banner");
     const accepted = localStorage.getItem("lumena_cookies_accepted");
-
-    if (!accepted) {
-      banner.style.display = "flex";
-    }
-
+    if (!accepted) banner.style.display = "flex";
     document.getElementById("acceptCookies").addEventListener("click", () => {
       localStorage.setItem("lumena_cookies_accepted", "true");
       banner.style.display = "none";
     });
-
     document.getElementById("declineCookies").addEventListener("click", () => {
       localStorage.setItem("lumena_cookies_accepted", "false");
       banner.style.display = "none";
@@ -173,65 +447,92 @@
   </script>
 
   <style>
-  .cookie-banner {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(15, 15, 15, 0.95);
-    border-top: 1px solid rgba(255,255,255,0.1);
-    color: #fff;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    font-family: 'Inter', sans-serif;
-    animation: fadeIn 0.6s ease-in-out;
-  }
+    /* Zachowuję Twój styl + dodaję lekkie uzupełnienia pod zakładki i opinie */
 
-  .cookie-content {
-    max-width: 900px;
-    text-align: center;
-  }
+    .orders {
+      margin-top: 30px;
+      display: grid;
+      gap: 20px;
+    }
+    .order-card {
+      background: #111;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .order-card h3 {
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .order-card .meta {
+      color: #ccc;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+    .order-card .desc {
+      font-size: 15px;
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+    .order-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
 
-  .cookie-content p {
-    font-size: 14px;
-    line-height: 1.5;
-    margin-bottom: 10px;
-  }
+    /* Zakładki (spójne z panelem firmy/admina) */
+    .admin-tabs-nav .tab-btn.active { background: var(--gold); color: var(--black); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
 
-  .cookie-content a {
-    color: var(--gold);
-    text-decoration: underline;
-  }
+    .admin-card {
+      background:#1a1a1a;
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:14px;
+      padding:24px;
+      margin-bottom:24px;
+    }
+    .admin-card h2 { color:var(--gold); margin-bottom:12px; font-size:1.2rem; }
 
-  .cookie-actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
+    .admin-grid { display:flex; flex-direction:column; gap:14px; }
+    .admin-card-row {
+      display:flex; gap:14px; justify-content:space-between; align-items:flex-start;
+      background:#111; border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:16px;
+    }
+    .row-main { flex:1; }
+    .row-head { display:flex; gap:12px; align-items:center; margin-bottom:6px; }
+    .row-head .gold { color:var(--gold); }
+    .row-head .diamonds { color:var(--gold); font-size:1.1rem; }
+    .row-meta { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:8px; }
+    .row-meta .muted { color:#bbb; font-size:0.9rem; }
+    .row-desc { color:#fff; line-height:1.5; }
+    .row-actions { display:flex; flex-direction:column; gap:8px; }
+    .cta.small { padding:6px 14px; border-radius:16px; font-size:0.85rem; }
 
-  .cookie-actions .cta {
-    background: var(--gold);
-    color: #000;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-  }
+    /* Modal edycji opinii */
+    .opinion-modal {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999;
+    }
+    .opinion-modal-content {
+      background: #171717; border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px; padding: 20px; width: 100%; max-width: 520px;
+    }
+    .opinion-modal-content h3 { color: var(--gold); margin-bottom: 10px; }
+    .rating-row { font-size: 24px; margin-bottom: 10px; user-select: none; }
+    .rating-row .diamond { cursor: pointer; margin-right: 6px; opacity: 0.6; }
+    .rating-row .diamond.active { opacity: 1; }
+    .opinion-modal-content textarea {
+      width: 100%; background: #111; border: 1px solid rgba(255,255,255,0.12);
+      color:#fff; border-radius: 10px; padding: 10px; margin-top: 8px;
+    }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 12px; }
 
-  .cookie-actions .cta.secondary {
-    background: transparent;
-    border: 1px solid var(--gold);
-    color: var(--gold);
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    /* Animacje fade-in jak na stronie głównej */
+    .fade { opacity: 0; transform: translateY(30px); transition: opacity .8s ease, transform .8s ease; }
+    .fade.visible { opacity: 1; transform: translateY(0); }
   </style>
 </body>
 </html>

@@ -28,7 +28,7 @@
       </a>
       <nav class="nav">
         <a href="/">Strona główna</a>
-        <a href="/pages/oferty.html">Zlecenia</a>
+        <a href="/pages/zlecenia.html">Zlecenia</a>
         <a href="/pages/login.html" class="cta">Zaloguj się</a>
       </nav>
     </div>
@@ -59,13 +59,13 @@
           </div>
           <div>
             <label for="haslo">Hasło *</label>
-            <input type="password" id="haslo" name="haslo" placeholder="Min. 6 znaków" required>
+            <input type="password" id="haslo" name="haslo" placeholder="Min. 6 znaków" required minlength="6">
           </div>
         </div>
 
         <div class="form-group">
-          <label for="branża">Branża *</label>
-          <select id="branża" name="branża" required>
+          <label for="branza">Branża *</label>
+          <select id="branza" name="branza" required>
             <option value="">Wybierz kategorię</option>
             <option>Remonty i budowa</option>
             <option>Wykończenia wnętrz</option>
@@ -103,14 +103,61 @@
     </div>
   </footer>
 
-  <script>
-    // zapisanie danych w localStorage i przekierowanie
-    document.getElementById("formFirma").addEventListener("submit", function(e) {
+  <!-- 🔥 FIREBASE — REJESTRACJA FIRMY -->
+  <script type="module">
+    import { auth, db } from "/js/firebase.js";
+    import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+    import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+    const form = document.getElementById("formFirma");
+
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      localStorage.setItem("loggedIn", true);
-      localStorage.setItem("userType", "company");
-      alert("Konto wykonawcy zostało utworzone pomyślnie!");
-      window.location.href = "/pages/panel-firma.html";
+
+      const nazwa = document.getElementById("nazwa").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const telefon = document.getElementById("telefon").value.trim();
+      const haslo = document.getElementById("haslo").value.trim();
+      const branza = document.getElementById("branza").value.trim();
+      const opis = document.getElementById("opis").value.trim();
+
+      if (!nazwa || !email || !telefon || !haslo || !branza) {
+        alert("Uzupełnij wszystkie wymagane pola.");
+        return;
+      }
+
+      try {
+        // Rejestracja w Firebase Authentication
+        const userCredential = await createUserWithEmailAndPassword(auth, email, haslo);
+        const user = userCredential.user;
+
+        // Zapis danych firmy w Firestore
+        await setDoc(doc(db, "firmy", user.uid), {
+          typ: "company",
+          nazwa,
+          email,
+          telefon,
+          branza,
+          opis,
+          createdAt: serverTimestamp()
+        });
+
+        // LocalStorage — automatyczne logowanie
+        localStorage.setItem("loggedIn", "true");
+        localStorage.setItem("userEmail", email);
+        localStorage.setItem("userType", "company");
+
+        alert("✅ Konto wykonawcy zostało utworzone pomyślnie!");
+        window.location.href = "/pages/panel-firma.html";
+
+      } catch (error) {
+        console.error("❌ Błąd rejestracji:", error);
+        if (error.code === "auth/email-already-in-use") {
+          alert("Ten adres e-mail jest już zarejestrowany.");
+        } else {
+          alert("Błąd: " + error.message);
+        }
+      }
     });
   </script>
 

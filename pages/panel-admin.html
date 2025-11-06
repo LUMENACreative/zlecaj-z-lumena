@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panel Administratora — ZLECAJ z LUMENA</title>
+
+  <meta name="description" content="Panel administratora ZLECAJ z LUMENA — zarządzanie opiniami, użytkownikami i zleceniami.">
+  <meta name="author" content="LUMENA Creative" />
+  <link rel="canonical" href="https://zlecajzlumena.pl/pages/panel-admin.html" />
+
+  <link rel="icon" href="/image/favicon.png" type="image/png">
+  <meta name="theme-color" content="#0b0b0f" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body>
+  <!-- HEADER — PANEL ADMINA -->
+  <header class="topbar panel-header">
+    <div class="wrap flex between center-v">
+      <div class="logo-area flex center-v">
+        <a href="/" class="logo">
+          <img src="/image/zlecaj-z-lumena.png" alt="ZLECAJ z LUMENA logo" height="64" />
+        </a>
+        <span class="panel-title">Panel Administratora</span>
+      </div>
+
+      <nav class="panel-nav flex center-v">
+        <button id="logoutBtn" class="cta secondary">Wyloguj się</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- PANEL ADMINA: TABS -->
+  <section class="panel">
+    <div class="wrap">
+      <h1 class="center" style="color:var(--gold)">Witaj, Administratorze 💎</h1>
+      <p class="subtitle">Zarządzaj opiniami, użytkownikami i zleceniami.</p>
+
+      <!-- Nawigacja zakładek -->
+      <div class="admin-tabs-nav center" style="margin-bottom:24px;">
+        <button class="tab-btn cta secondary active" data-tab="opinieTab">Opinie 💎</button>
+        <button class="tab-btn cta secondary" data-tab="uzytkownicyTab">Użytkownicy 👥</button>
+        <button class="tab-btn cta secondary" data-tab="zleceniaTab">Zlecenia 🧱</button>
+      </div>
+
+      <!-- Zawartość zakładek -->
+      <div class="admin-tabs">
+
+        <!-- OPINIE -->
+        <div id="opinieTab" class="tab-pane active">
+          <div class="admin-card">
+            <h2>Opinie (od najnowszych)</h2>
+            <div id="opinieListAdmin" class="admin-list">
+              <p>Ładowanie opinii...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- UŻYTKOWNICY -->
+        <div id="uzytkownicyTab" class="tab-pane">
+          <div class="admin-card">
+            <h2>Firmy</h2>
+            <div id="firmyListAdmin" class="admin-list">
+              <p>Ładowanie firm...</p>
+            </div>
+          </div>
+
+          <div class="admin-card" style="margin-top:24px;">
+            <h2>Klienci</h2>
+            <div id="klienciListAdmin" class="admin-list">
+              <p>Ładowanie klientów...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ZLECENIA -->
+        <div id="zleceniaTab" class="tab-pane">
+          <div class="admin-card">
+            <h2>Zlecenia (od najnowszych)</h2>
+            <div id="zleceniaListAdmin" class="admin-list">
+              <p>Ładowanie zleceń...</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="lumena-footer">
+    <div class="wrap foot">
+      <div>
+        <h5>Sekcje</h5>
+        <a href="/pages/zlecenia.html">Zlecenia</a>
+        <a href="/pages/rejestracja.html">Rejestracja</a>
+        <a href="/pages/login.html">Logowanie</a>
+      </div>
+      <div>
+        <h5>Informacje</h5>
+        <a href="/pages/o-lumena.html">O LUMENA</a>
+        <a href="/pages/polityka.html">Polityka prywatności</a>
+        <a href="/pages/rodo.html">RODO</a>
+      </div>
+      <div>
+        <h5>Kontakt</h5>
+        <a href="mailto:kontakt.lumena.studio@gmail.com">kontakt.lumena.studio@gmail.com</a>
+        <a href="#">Instagram</a>
+        <a href="#">Pinterest</a>
+      </div>
+    </div>
+    <div class="copy">
+      © 2025 <span class="gold">LUMENA Creative</span> 💎  
+      <br><small>Wszystkie prawa zastrzeżone.</small>
+    </div>
+  </footer>
+
+  <!-- 🔐 OCHRONA DOSTĘPU + LOGIKA ADMINA -->
+  <script type="module">
+    import { db } from "/js/firebase.js";
+    import {
+      collection, getDocs, getDoc, doc,
+      query, orderBy, deleteDoc, where
+    } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+    // ======= OCHRONA DOSTĘPU =======
+    const loggedIn = localStorage.getItem("loggedIn");
+    const userEmail = localStorage.getItem("userEmail");
+    const userType  = localStorage.getItem("userType");
+
+    // Dostęp tylko dla konkretnego e-maila (admin)
+    const ADMIN_EMAIL = "arkadiuszgruca41@gmail.com";
+
+    if (!loggedIn || userEmail !== ADMIN_EMAIL) {
+      alert("Dostęp tylko dla administratora.");
+      window.location.href = "/pages/login.html";
+    } else {
+      // Utrzymujemy spójność typu konta lokalnie
+      if (userType !== "admin") {
+        localStorage.setItem("userType", "admin");
+      }
+    }
+
+    // ======= ELEMENTY DOM =======
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const opinieListAdmin   = document.getElementById("opinieListAdmin");
+    const firmyListAdmin    = document.getElementById("firmyListAdmin");
+    const klienciListAdmin  = document.getElementById("klienciListAdmin");
+    const zleceniaListAdmin = document.getElementById("zleceniaListAdmin");
+
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const tabPanes   = document.querySelectorAll(".tab-pane");
+
+    // ======= TABY =======
+    tabButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-tab");
+        tabButtons.forEach(b => b.classList.remove("active"));
+        tabPanes.forEach(p => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(id).classList.add("active");
+      });
+    });
+
+    // ======= WYLOGOWANIE =======
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        if (confirm("Czy chcesz się wylogować?")) {
+          localStorage.clear();
+          window.location.href = "/pages/login.html";
+        }
+      });
+    }
+
+    // ======= POMOCNICZE: pobranie nazwy firmy po firmId (cache) =======
+    const firmNameCache = new Map();
+    async function getFirmName(firmId) {
+      if (!firmId) return "(brak ID firmy)";
+      if (firmNameCache.has(firmId)) return firmNameCache.get(firmId);
+      try {
+        const snap = await getDoc(doc(db, "firmy", firmId));
+        const name = snap.exists() ? (snap.data().nazwa || "(bez nazwy)") : "(nie znaleziono)";
+        firmNameCache.set(firmId, name);
+        return name;
+      } catch {
+        return "(błąd pobierania)";
+      }
+    }
+
+    // ======= OPINIE (od najnowszych) =======
+    async function loadOpinieAdmin() {
+      try {
+        opinieListAdmin.innerHTML = "<p>Ładowanie opinii...</p>";
+
+        // Kolekcja 'opinie' może nie istnieć — po prostu będzie pusto
+        const qOpinie = query(collection(db, "opinie"), orderBy("createdAt", "desc"));
+        const snap = await getDocs(qOpinie);
+
+        if (snap.empty) {
+          opinieListAdmin.innerHTML = "<p>Brak opinii (kolekcja utworzy się automatycznie przy pierwszej dodanej opinii).</p>";
+          return;
+        }
+
+        const list = document.createElement("div");
+        list.classList.add("admin-grid");
+
+        for (const docSnap of snap.docs) {
+          const o = docSnap.data();
+          const id = docSnap.id;
+
+          const firmName = await getFirmName(o.firmId);
+          const dateStr = o.createdAt?.toDate
+            ? o.createdAt.toDate().toLocaleDateString("pl-PL")
+            : "";
+
+          // Diamenty
+          let diamonds = "";
+          const ocena = o.ocena || 0;
+          for (let i = 1; i <= 5; i++) {
+            diamonds += i <= ocena ? "💎" : "◇";
+          }
+
+          const card = document.createElement("div");
+          card.classList.add("admin-card-row");
+          card.innerHTML = `
+            <div class="row-main">
+              <div class="row-head">
+                <strong class="gold">${firmName}</strong>
+                <span class="diamonds">${diamonds}</span>
+              </div>
+              <div class="row-meta">
+                <span class="muted">Autor: ${o.autorEmail || "Anonim"}</span>
+                <span class="muted">Data: ${dateStr}</span>
+              </div>
+              <p class="row-desc">${o.tresc || ""}</p>
+            </div>
+            <div class="row-actions">
+              <button class="cta small secondary delete-opinia" data-id="${id}">Usuń</button>
+            </div>
+          `;
+          list.appendChild(card);
+        }
+
+        opinieListAdmin.innerHTML = "";
+        opinieListAdmin.appendChild(list);
+
+      } catch (err) {
+        console.error("Błąd ładowania opinii:", err);
+        opinieListAdmin.innerHTML = "<p>❌ Wystąpił błąd podczas pobierania opinii.</p>";
+      }
+    }
+
+    opinieListAdmin.addEventListener("click", async (e) => {
+      if (e.target.classList.contains("delete-opinia")) {
+        const id = e.target.dataset.id;
+        if (!id) return;
+        if (confirm("Usunąć tę opinię? Tej operacji nie można cofnąć.")) {
+          try {
+            await deleteDoc(doc(db, "opinie", id));
+            loadOpinieAdmin();
+          } catch (err) {
+            console.error("Błąd usuwania opinii:", err);
+            alert("Nie udało się usunąć opinii.");
+          }
+        }
+      }
+    });
+
+    // ======= UŻYTKOWNICY =======
+    async function loadUzytkownicyAdmin() {
+      // FIRMY
+      try {
+        firmyListAdmin.innerHTML = "<p>Ładowanie firm...</p>";
+        const snapFirmy = await getDocs(collection(db, "firmy"));
+        if (snapFirmy.empty) {
+          firmyListAdmin.innerHTML = "<p>Brak firm w kolekcji 'firmy'.</p>";
+        } else {
+          // sortuj alfabetycznie po nazwie
+          const items = snapFirmy.docs
+            .map(d => ({ id: d.id, ...d.data() }))
+            .sort((a, b) => (a.nazwa || "").localeCompare(b.nazwa || ""));
+
+          const list = document.createElement("div");
+          list.classList.add("admin-grid");
+
+          items.forEach(f => {
+            const card = document.createElement("div");
+            card.classList.add("admin-card-row");
+            card.innerHTML = `
+              <div class="row-main">
+                <div class="row-head">
+                  <strong class="gold">${f.nazwa || "(bez nazwy)"}</strong>
+                  <span class="muted">${f.branza || ""}</span>
+                </div>
+                <div class="row-meta">
+                  <span class="muted">E-mail: ${f.email || "-"}</span>
+                  <span class="muted">Lokalizacja: ${f.lokalizacja || f.miasto || "-"}</span>
+                </div>
+                <p class="row-desc">${f.opis || ""}</p>
+              </div>
+            `;
+            list.appendChild(card);
+          });
+
+          firmyListAdmin.innerHTML = "";
+          firmyListAdmin.appendChild(list);
+        }
+      } catch (err) {
+        console.error("Błąd ładowania firm:", err);
+        firmyListAdmin.innerHTML = "<p>❌ Błąd pobierania firm.</p>";
+      }
+
+      // KLIENCI (opcjonalnie, jeśli masz kolekcję uzytkownicy -> typ: 'client')
+      try {
+        const snapKlienci = await getDocs(query(collection(db, "uzytkownicy"), where("typ","==","client")));
+        if (snapKlienci.empty) {
+          klienciListAdmin.innerHTML = "<p>Brak kolekcji 'uzytkownicy' lub brak klientów.</p>";
+        } else {
+          const items = snapKlienci.docs
+            .map(d => ({ id: d.id, ...d.data() }))
+            .sort((a, b) => (a.email || "").localeCompare(b.email || ""));
+
+          const list = document.createElement("div");
+          list.classList.add("admin-grid");
+
+          items.forEach(u => {
+            const card = document.createElement("div");
+            card.classList.add("admin-card-row");
+            card.innerHTML = `
+              <div class="row-main">
+                <div class="row-head">
+                  <strong class="gold">${u.email || "(bez e-maila)"}</strong>
+                  <span class="muted">${u.typ || "client"}</span>
+                </div>
+                <div class="row-meta">
+                  <span class="muted">Imię: ${u.imie || "-"}</span>
+                  <span class="muted">Miasto: ${u.miasto || "-"}</span>
+                </div>
+              </div>
+            `;
+            list.appendChild(card);
+          });
+
+          klienciListAdmin.innerHTML = "";
+          klienciListAdmin.appendChild(list);
+        }
+      } catch (err) {
+        // jeżeli kolekcja nie istnieje – kulturalny komunikat już jest
+        console.warn("Kolekcja 'uzytkownicy' może nie istnieć:", err);
+      }
+    }
+
+    // ======= ZLECENIA (od najnowszych) =======
+    async function loadZleceniaAdmin() {
+      try {
+        zleceniaListAdmin.innerHTML = "<p>Ładowanie zleceń...</p>";
+
+        // Kolekcja 'zlecenia' może nie istnieć — po prostu będzie pusto
+        const qZlec = query(collection(db, "zlecenia"), orderBy("createdAt", "desc"));
+        const snap = await getDocs(qZlec);
+
+        if (snap.empty) {
+          zleceniaListAdmin.innerHTML = "<p>Brak zleceń (kolekcja utworzy się automatycznie przy pierwszym dodanym zleceniu).</p>";
+          return;
+        }
+
+        const list = document.createElement("div");
+        list.classList.add("admin-grid");
+
+        snap.forEach(docSnap => {
+          const z = docSnap.data();
+          const id = docSnap.id;
+          const dateStr = z.createdAt?.toDate
+            ? z.createdAt.toDate().toLocaleDateString("pl-PL")
+            : "";
+
+          const card = document.createElement("div");
+          card.classList.add("admin-card-row");
+          card.innerHTML = `
+            <div class="row-main">
+              <div class="row-head">
+                <strong class="gold">${z.tytul || "(bez tytułu)"}</strong>
+                <span class="muted">${z.miasto || "-"}</span>
+              </div>
+              <div class="row-meta">
+                <span class="muted">Autor: ${z.autorEmail || "-"}</span>
+                <span class="muted">Data: ${dateStr}</span>
+              </div>
+              <p class="row-desc">${z.opis || ""}</p>
+            </div>
+            <div class="row-actions">
+              <button class="cta small secondary delete-zlecenie" data-id="${id}">Usuń</button>
+            </div>
+          `;
+          list.appendChild(card);
+        });
+
+        zleceniaListAdmin.innerHTML = "";
+        zleceniaListAdmin.appendChild(list);
+      } catch (err) {
+        console.error("Błąd ładowania zleceń:", err);
+        zleceniaListAdmin.innerHTML = "<p>❌ Wystąpił błąd podczas pobierania zleceń.</p>";
+      }
+    }
+
+    zleceniaListAdmin.addEventListener("click", async (e) => {
+      if (e.target.classList.contains("delete-zlecenie")) {
+        const id = e.target.dataset.id;
+        if (!id) return;
+        if (confirm("Usunąć to zlecenie? Tej operacji nie można cofnąć.")) {
+          try {
+            await deleteDoc(doc(db, "zlecenia", id));
+            loadZleceniaAdmin();
+          } catch (err) {
+            console.error("Błąd usuwania zlecenia:", err);
+            alert("Nie udało się usunąć zlecenia.");
+          }
+        }
+      }
+    });
+
+    // ======= INIT =======
+    loadOpinieAdmin();
+    loadUzytkownicyAdmin();
+    loadZleceniaAdmin();
+  </script>
+
+  <!-- Mini-styl dla panelu admina (uzupełnia Twój style.css, nic nie nadpisuje) -->
+  <style>
+    .admin-tabs-nav .tab-btn.active {
+      background: var(--gold);
+      color: var(--black);
+    }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    .admin-card {
+      background:#1a1a1a;
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:14px;
+      padding:24px;
+      margin-bottom:24px;
+    }
+    .admin-card h2 {
+      color:var(--gold);
+      margin-bottom:16px;
+      font-size:1.2rem;
+    }
+    .admin-grid {
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+    .admin-card-row {
+      display:flex;
+      gap:14px;
+      justify-content:space-between;
+      align-items:flex-start;
+      background:#111;
+      border:1px solid rgba(255,255,255,0.07);
+      border-radius:12px;
+      padding:16px;
+    }
+    .row-main { flex:1; }
+    .row-head { display:flex; gap:12px; align-items:center; margin-bottom:6px; }
+    .row-head .gold { color:var(--gold); }
+    .row-head .diamonds { color:var(--gold); font-size:1.1rem; }
+    .row-meta { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:8px; }
+    .row-meta .muted { color:#bbb; font-size:0.9rem; }
+    .row-desc { color:#fff; line-height:1.5; }
+    .row-actions { display:flex; flex-direction:column; gap:8px; }
+    .cta.small { padding:6px 14px; border-radius:16px; font-size:0.85rem; }
+  </style>
+</body>
+</html>
