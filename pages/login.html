@@ -1,166 +1,66 @@
-<!doctype html>
-<html lang="pl">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Logowanie — ZLECAJ z LUMENA</title>
+<!-- 🔥 Firebase logowanie -->
+<script type="module">
+  import { app, auth } from "/js/firebase.js";
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 
-  <meta name="description" content="Zaloguj się do swojego konta w serwisie ZLECAJ z LUMENA i zarządzaj swoimi zleceniami lub ofertami.">
-  <meta name="author" content="LUMENA Creative" />
-  <link rel="canonical" href="https://zlecajzlumena.pl/pages/login.html" />
+  const firebaseAuth = auth || getAuth(app);
+  const loginForm = document.getElementById("loginForm");
+  const loginBtn = document.getElementById("loginBtn");
 
-  <link rel="icon" href="/image/favicon.png" type="image/png">
-  <meta name="theme-color" content="#0b0b0f" />
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css" />
-</head>
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const userType = document.getElementById("userType").value;
 
-<body>
-  <!-- HEADER -->
-  <header class="topbar">
-    <div class="wrap flex between center-v">
-      <a href="/" class="logo">
-        <img src="/image/zlecaj-z-lumena.png" alt="ZLECAJ z LUMENA logo" height="48" />
-      </a>
-      <nav class="nav">
-        <a href="/pages/rejestracja.html">Rejestracja</a>
-        <a href="/pages/login.html" class="cta small">Zaloguj się</a>
-      </nav>
-    </div>
-  </header>
+    if (!email || !password || !userType) {
+      alert("Uzupełnij wszystkie pola.");
+      return;
+    }
 
-  <!-- FORMULARZ LOGOWANIA -->
-  <section class="form-section">
-    <div class="wrap" style="max-width:500px;">
-      <h1>Zaloguj się 💎</h1>
-      <p class="subtitle">Uzyskaj dostęp do swojego panelu</p>
+    loginBtn.textContent = "Logowanie...";
+    loginBtn.disabled = true;
 
-      <form id="loginForm" class="zlecenie-form">
-        <div class="form-group">
-          <label for="email">Adres e-mail</label>
-          <input type="email" id="email" placeholder="np. jan.kowalski@gmail.com" required />
-        </div>
-        <div class="form-group">
-          <label for="password">Hasło</label>
-          <input type="password" id="password" placeholder="••••••••" required />
-        </div>
+    try {
+      const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password);
+      const user = userCredential.user;
 
-        <div class="form-group">
-          <label for="userType">Typ konta</label>
-          <select id="userType" required>
-            <option value="">Wybierz typ konta</option>
-            <option value="client">Klient</option>
-            <option value="company">Firma</option>
-          </select>
-        </div>
+      // Zapis do localStorage
+      localStorage.setItem("loggedIn", "true");
+      localStorage.setItem("userEmail", email);
 
-        <button type="submit" class="cta" id="loginBtn">Zaloguj się</button>
-
-        <div class="form-links center" style="margin-top:20px;">
-          <a href="/pages/rejestracja.html">Nie masz konta? Zarejestruj się</a>
-        </div>
-      </form>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="lumena-footer">
-    <div class="wrap foot">
-      <div>
-        <h5>Sekcje</h5>
-        <a href="/pages/zlecenia.html">Zlecenia</a>
-        <a href="/pages/rejestracja.html">Rejestracja</a>
-      </div>
-      <div>
-        <h5>Informacje</h5>
-        <a href="/pages/o-lumena.html">O LUMENA</a>
-        <a href="/pages/polityka.html">Polityka prywatności</a>
-      </div>
-      <div>
-        <h5>Kontakt</h5>
-        <a href="mailto:kontakt.lumena.studio@gmail.com">kontakt.lumena.studio@gmail.com</a>
-        <a href="#">Instagram</a>
-      </div>
-    </div>
-    <div class="copy">
-      © 2025 <span class="gold">LUMENA Creative</span> 💎  
-      <br><small>Wszystkie prawa zastrzeżone.</small>
-    </div>
-  </footer>
-
-  <!-- 🔥 Firebase logowanie -->
-  <script type="module">
-    import { auth } from "/js/firebase.js";
-    import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-
-    const loginForm = document.getElementById("loginForm");
-    const loginBtn = document.getElementById("loginBtn");
-
-    loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const userType = document.getElementById("userType").value;
-
-      if (!email || !password || !userType) {
-        alert("Uzupełnij wszystkie pola.");
+      // 🔐 ADMIN LOGIN
+      if (email === "arkadiuszgruca41@gmail.com") {
+        localStorage.setItem("userType", "admin");
+        alert("Witaj ponownie, Administratorze 💎");
+        window.location.href = "/pages/panel-admin.html";
         return;
       }
 
-      loginBtn.textContent = "Logowanie...";
-      loginBtn.disabled = true;
+      // 🔐 NORMALNI UŻYTKOWNICY
+      localStorage.setItem("userType", userType);
 
-      try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-
-        // Zapis do localStorage
-        localStorage.setItem("loggedIn", "true");
-        localStorage.setItem("userEmail", email);
-
-        // 🔐 ADMIN LOGIN
-        if (email === "arkadiuszgruca41@gmail.com") {
-          localStorage.setItem("userType", "admin");
-          alert("Witaj ponownie, Administratorze 💎");
-          window.location.href = "/pages/panel-admin.html";
-          return;
-        }
-
-        // 🔐 NORMALNI UŻYTKOWNICY
-        localStorage.setItem("userType", userType);
-
-        if (userType === "client") {
-          alert("Witaj ponownie, Kliencie 💎");
-          window.location.href = "/pages/panel-klient.html";
-        } else if (userType === "company") {
-          alert("Witaj ponownie, Wykonawco 💎");
-          window.location.href = "/pages/panel-firma.html";
-        }
-
-      } catch (error) {
-        console.error("Błąd logowania:", error);
-        alert("❌ Nieprawidłowy e-mail lub hasło.");
-      } finally {
-        loginBtn.textContent = "Zaloguj się";
-        loginBtn.disabled = false;
+      if (userType === "client") {
+        alert("Witaj ponownie, Kliencie 💎");
+        window.location.href = "/pages/panel-klient.html";
+      } else if (userType === "company") {
+        alert("Witaj ponownie, Wykonawco 💎");
+        window.location.href = "/pages/panel-firma.html";
       }
-    });
-  </script>
 
-  <style>
-    select {
-      background-color: #111;
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 12px;
+    } catch (error) {
+      console.error("Błąd logowania:", error);
+      if (error.code === "auth/invalid-credential") {
+        alert("❌ Nieprawidłowy e-mail lub hasło.");
+      } else if (error.code === "auth/user-not-found") {
+        alert("❌ Konto o podanym adresie e-mail nie istnieje.");
+      } else {
+        alert("⚠️ Błąd logowania: " + error.message);
+      }
+    } finally {
+      loginBtn.textContent = "Zaloguj się";
+      loginBtn.disabled = false;
     }
-    select:focus {
-      border-color: var(--gold);
-      outline: none;
-    }
-  </style>
-</body>
-</html>
+  });
+</script>
