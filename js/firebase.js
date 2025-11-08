@@ -4,7 +4,7 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/11.0.0/firebase
 import { getAuth } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-storage.js";
 
-// 🧩 Konfiguracja Twojego projektu Firebase
+// 🧩 Konfiguracja projektu Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDgaH3j1FKB0mPkCqH7VG9vwhX1q82NkR0",
   authDomain: "zlecaj-z-lumena.firebaseapp.com",
@@ -18,7 +18,7 @@ const firebaseConfig = {
 // 🚀 Inicjalizacja Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth(app);
+const auth = getAuth(app); // ← tu ważne: przekazujemy app
 const storage = getStorage(app);
 
 // 🌍 Eksporty do użycia w innych plikach
