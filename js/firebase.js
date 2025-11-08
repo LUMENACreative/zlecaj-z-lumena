@@ -9,7 +9,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyDgaH3j1FKB0mPkCqH7VG9vwhX1q82NkR0",
   authDomain: "zlecaj-z-lumena.firebaseapp.com",
   projectId: "zlecaj-z-lumena",
-  storageBucket: "zlecaj-z-lumena.appspot.com", // ✅ poprawne wiadro
+  storageBucket: "zlecaj-z-lumena.appspot.com",
   messagingSenderId: "46650398157",
   appId: "1:46650398157:web:cd4d90782bb3039b8ce354",
   measurementId: "G-W8TCWBDE7Y"
@@ -17,11 +17,9 @@ const firebaseConfig = {
 
 // 🚀 Inicjalizacja Firebase
 const app = initializeApp(firebaseConfig);
-
-// 📦 Moduły Firebase
 const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
 
-// 🔁 Eksporty do użycia w innych plikach
+// 🌍 Eksporty do użycia w innych plikach
 export { app, db, auth, storage };
